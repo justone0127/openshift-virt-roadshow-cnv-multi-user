@@ -119,6 +119,9 @@ image::2025_spring/module-09-networking/12_VM_Network_Console.png[link=self, win
 
 . 동일한 방식으로 *fedora02* VM도 *flatnetwork* 에 연결합니다.
 
+. *fedora01* VM의 *IP*는 *VirtualMachines* 메뉴 선택 후, *fedora01* VM의 *Overview*의 *Network* 메뉴에서 확인하여 복사할 수 있습니다.
++ image::2025_spring/module-09-networking/12_1_VM_Network_IP.png[link=self, window=blank, width=100%]
+
 . 콘솔에서 *ping* 명령어를 사용해 두 VM(fedora01과 fedora02) 간의 직접 통신을 확인합니다.
 +
 image::2025_spring/module-09-networking/13_VM_Network_Ping.png[link=self, window=blank, width=100%]
