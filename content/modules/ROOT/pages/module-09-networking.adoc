@@ -40,6 +40,32 @@ NOTE: *NodeNetworkConfigurationPolicy* 는 노드 단위 구성을 수행하므�
 +
 image::2025_spring/module-09-networking/05_NodeNetworkConfigurationPolicy_YAML.png[link=self, window=blank, width=100%]
 
+////
+[source,yaml]
+----
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: br-flat
+spec:
+  desiredState:
+    interfaces:
+      - bridge:
+          options:
+            stp:
+              enabled: false
+          port:
+            - name: enp3s0
+        description: Linux bridge with enp3s0 as a port
+        ipv4:
+          dhcp: false
+          enabled: false
+        name: br-flat
+        state: up
+        type: linux-bridge
+----
+////
+
 [[nad]]
 == 네트워크 연결 정의 생성
 
@@ -50,6 +76,7 @@ NOTE: 네트워크 연결 정의는 OpenShift에 기존 네트워크 장치를 �
 . 좌측 메뉴에서 *Network* > *Network Attachment Definitions* 를 선택하고 *Create network attachment definition* 버튼을 클릭합니다.
 +
 image::2025_spring/module-09-networking/06_NetworkAttachDefinition_Create.png[link=self, window=blank, width=100%]
++
 
 IMPORTANT: NAD를 생성할 때 반드시 *vmexamples-{user}* 프로젝트 내에 있어야 합니다.
 
@@ -59,9 +86,10 @@ IMPORTANT: NAD를 생성할 때 반드시 *vmexamples-{user}* 프로젝트 내�
 * *Bridge Name*: br-flat
 +
 image::2025_spring/module-09-networking/07_NetworkAttachDefinition_Create_Form.png[link=self, window=blank, width=100%]
++
 
 NOTE: 위 폼에는 *VLAN Tag Number* 입력란이 있으며, 이는 VLAN 태그가 필요한 네트워크에 연결할 때 사용됩니다. 본 실습에서는 태그 없는 네트워크를 사용하므로 입력할 필요가 없습니다. 
-
++
 NOTE: 하나의 Linux Bridge는 여러 VLAN과 연동될 수 있으며, 이 경우 각 VLAN에 대해 NAD만 생성하면 됩니다. 별도의 브리지나 호스트 인터페이스는 필요하지 않습니다.
 
 . NAD의 세부 정보를 확인합니다. *vmexamples-{user}* 프로젝트에 생성된 것이므로 다른 프로젝트에서는 사용할 수 없습니다.
@@ -78,13 +106,13 @@ image::2025_spring/module-09-networking/09_VM_Network_Tab.png[link=self, window=
 . *Add Network Interface* 를 클릭하고 아래와 같이 입력한 뒤 *Save* 를 클릭합니다.
 +
 image::2025_spring/module-09-networking/10_VM_Network_Attach.png[link=self, window=blank, width=100%]
-
++
 NOTE: 이 브리지는 외부 네트워크에 직접 연결되므로, NAT(masquerade) 기능을 사용하지 않아도 됩니다. 따라서 *type* 은 *Bridge* 로 설정합니다.
 
 . *Actions* 메뉴나 *Play* 버튼을 사용해 VM을 시작하고, *Console* 탭에서 부팅 과정을 확인합니다.
 +
 image::2025_spring/module-09-networking/11_VM_Network_Startup.png[]
-
++
 *enp2s0* 인터페이스는 *192.168.64.0/18* 의 flat 네트워크에서 IP 주소를 할당받습니다. 해당 네트워크에는 DHCP 서버가 있어 IP를 할당해 줍니다.
 +
 image::2025_spring/module-09-networking/12_VM_Network_Console.png[link=self, window=blank, width=100%]
