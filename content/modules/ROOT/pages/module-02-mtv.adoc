@@ -9,7 +9,7 @@
 
 [NOTE]
 ====
-*Migration Toolkit for Virtualization*은 이미 OperatorHub에서 사용할 수 있는 오퍼레이터를 통해 클러스터에 배포되어 있습니다.
+**Migration Toolkit for Virtualization**은 이미 OperatorHub에서 사용할 수 있는 오퍼레이터를 통해 클러스터에 배포되어 있습니다.
 ====
 
 MTV 오퍼레이터 설치 및 구성 방법은 다음 문서를 참고하세요: https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/installing-the-operator_mtv[링크^].
@@ -40,7 +40,7 @@ MTV를 직접 구성하고자 하는 경우, 다음 링크에서 각각의 환�
 
 [NOTE]
 ====
-*Migration Toolkit for Virtualization*은 규칙을 위반한 VM 이름에 대해 자동으로 새 이름을 할당하여 마이그레이션이 문제 없이 진행되도록 합니다.
+**Migration Toolkit for Virtualization**은 규칙을 위반한 VM 이름에 대해 자동으로 새 이름을 할당하여 마이그레이션이 문제 없이 진행되도록 합니다.
 ====
 
 [[migrating_vms]]
@@ -58,7 +58,7 @@ OpenShift로 마이그레이션할 3계층 애플리케이션이 VMware에 배�
 
 [NOTE]
 ====
-OpenShift는 SDN에 연결된 VM에 대해 네트워크 트래픽과 로드 밸런싱을 기본적으로 처리하므로 HAproxy(로드 밸런서) VM은 마이그레이션할 필요가 없습니다. 대신 *Service* 리소스를 통해 처리됩니다.
+OpenShift는 SDN에 연결된 VM에 대해 네트워크 트래픽과 로드 밸런싱을 기본적으로 처리하므로 HAproxy(로드 밸런서) VM은 마이그레이션할 필요가 없습니다. 대신 **Service** 리소스를 통해 처리됩니다.
 ====
 
 === VMware 환경 확인
@@ -66,28 +66,28 @@ OpenShift는 SDN에 연결된 VM에 대해 네트워크 트래픽과 로드 밸�
 vSphere의 데이터스토어 및 포트 그룹 등 리소스를 OpenShift의 스토리지 클래스 및 네트워크 연결 정의로 매핑하는 과정을 이해하기 위해 먼저 VMware 환경을 확인해 보겠습니다.
 
 . VMware vCenter로 이동: https://{vcenter_console}[vCenter Console^]
-. *Launch vSphere Client* 클릭
+. **Launch vSphere Client** 클릭
 . 다음 자격 증명으로 로그인:
-- *사용자:* {vcenter_full_user}
-- *비밀번호:* {vcenter_password}
+- **사용자:** {vcenter_full_user}
+- **비밀번호:** {vcenter_password}
 
 . 기본적으로 탐색 트리 상단의 *Inventory* 뷰로 이동되며, 현재 사용자 계정은 해당 오브젝트를 볼 수 없다는 메시지가 나올 수 있습니다. 이는 정상입니다.
 +
 image::2025_spring/module-02-mtv/00_VMware_First_Login.png[link=self, window=blank, width=100%]
 
-. 왼쪽에서 *Workloads* 아이콘을 클릭하고 탐색 트리를 확장하여 *Roadshow* 폴더와 그 하위의 4개 VM을 확인합니다.
+. 왼쪽에서 **Workloads** 아이콘을 클릭하고 탐색 트리를 확장하여 **Roadshow** 폴더와 그 하위의 4개 VM을 확인합니다.
 +
 image::2025_spring/module-02-mtv/01_Workload_VM_List.png[link=self, window=blank, width=100%]
 
-. 상단의 *VMs* 아이콘을 클릭하여 각 가상 머신의 세부 정보를 확인합니다.
+. 상단의 **VMs** 아이콘을 클릭하여 각 가상 머신의 세부 정보를 확인합니다.
 +
 image::2025_spring/module-02-mtv/02_VM_Details.png[link=self, window=blank, width=100%]
 
-. *Networks* 뷰로 이동한 후 트리를 확장하여 VM이 사용하는 포트 그룹을 확인합니다. 포트 그룹 이름은 *segment-migrating-to-ocpvirt*입니다.
+. **Networks** 뷰로 이동한 후 트리를 확장하여 VM이 사용하는 포트 그룹을 확인합니다. 포트 그룹 이름은 **segment-migrating-to-ocpvirt**입니다.
 +
 image::2025_spring/module-02-mtv/03_vSphere_Network.png[link=self, window=blank, width=100%]
 
-. 마지막으로 *Datastores* 뷰로 이동하여 *RS00* 데이터센터에 연결된 데이터스토어를 확인합니다. *VMs* 서브탭을 선택하면 각 가상 머신이 사용하는 용량도 볼 수 있습니다.
+. 마지막으로 **Datastores** 뷰로 이동하여 **RS00** 데이터센터에 연결된 데이터스토어를 확인합니다. **VMs** 서브탭을 선택하면 각 가상 머신이 사용하는 용량도 볼 수 있습니다.
 +
 image::2025_spring/module-02-mtv/04_vSphere_Datastore.png[link=self, window=blank, width=100%]
 
@@ -97,16 +97,16 @@ VMware vSphere 및 해당 VM 확인을 마쳤다면 해당 브라우저 탭을 �
 
 [NOTE]
 ====
-*Migration Toolkit for Virtualization (MTV)*는 OpenShift Virtualization과는 별개의 도구이며, *Virtualization* 페르소나에서 접근할 수 없습니다.
+**Migration Toolkit for Virtualization (MTV)**는 OpenShift Virtualization과는 별개의 도구이며, *Virtualization* 페르소나에서 접근할 수 없습니다.
 ====
 
-. 왼쪽 메뉴에서 *Virtualization* 클릭 후 드롭다운에서 *Administrator* 선택
+. 왼쪽 메뉴에서 **Virtualization** 클릭 후 드롭다운에서 **Administrator** 선택
 +
 image::2025_spring/module-02-mtv/05_Admin_Persona.png[link=self, window=blank, width=100%]
 
-. 왼쪽 메뉴에서 *Migration* -> *Providers for virtualization*으로 이동
+. 왼쪽 메뉴에서 **Migration** -> **Providers for virtualization**으로 이동
 
-. 상단에서 프로젝트를 *mtv-{user}*로 선택
+. 상단에서 프로젝트를 **mtv-{user}**로 선택
 +
 image::2025_spring/module-02-mtv/06_MTV_Providers.png[link=self, window=blank, width=100%]
 
@@ -115,23 +115,23 @@ image::2025_spring/module-02-mtv/06_MTV_Providers.png[link=self, window=blank, w
 MTV 2.4 이상 버전은 프로젝트/네임스페이스를 인식하므로 관리자 권한이 필요하지 않습니다. 애플리케이션 팀이나 VM 사용자에게 권한을 위임하여 스스로 마이그레이션을 진행할 수 있습니다!
 ====
 
-기본적으로 *host*라는 프로바이더가 있으며 이는 *OpenShift Virtualization* 대상 플랫폼을 나타냅니다.
+기본적으로 **host**라는 프로바이더가 있으며 이는 **OpenShift Virtualization** 대상 플랫폼을 나타냅니다.
 
-또한, 실습에서는 이미 *vmware*라는 추가 프로바이더가 구성되어 있으며, 방금 확인한 VMware vSphere 클러스터를 엔드포인트로 가지고 있습니다.
+또한, 실습에서는 이미 **vmware**라는 추가 프로바이더가 구성되어 있으며, 방금 확인한 VMware vSphere 클러스터를 엔드포인트로 가지고 있습니다.
 
 === 마이그레이션 계획 생성
 
-환경 및 프로바이더를 확인했으니 이제 *마이그레이션 계획*을 생성해 VMware vSphere에서 Red Hat OpenShift Virtualization으로 어떤 VM을 어떻게 마이그레이션할지 설정합니다.
+환경 및 프로바이더를 확인했으니 이제 **마이그레이션 계획**을 생성해 VMware vSphere에서 Red Hat OpenShift Virtualization으로 어떤 VM을 어떻게 마이그레이션할지 설정합니다.
 
-. 왼쪽 메뉴에서 *Migration* -> *Plans for virtualization*으로 이동 후 *Create Plan* 클릭
+. 왼쪽 메뉴에서 **Migration** -> **Plans for virtualization**으로 이동 후 **Create Plan** 클릭
 +
 image::2025_spring/module-02-mtv/07_Create_VMWARE_Plan.png[link=self, window=blank, width=100%]
 
-. 마이그레이션할 소스 프로바이더를 선택하라는 메시지가 나오면 *VMware* 타일 클릭
+. 마이그레이션할 소스 프로바이더를 선택하라는 메시지가 나오면 **VMware** 타일 클릭
 +
 image::2025_spring/module-02-mtv/08_VMware_Source_Provider.png[link=self, window=blank, width=100%]
 
-. 환경 내 많은 VM 목록이 나타나면 상단 검색창에 *{user}*를 입력해 자신의 VM을 필터링
+. 환경 내 많은 VM 목록이 나타나면 상단 검색창에 **{user}**를 입력해 자신의 VM을 필터링
 +
 image::2025_spring/module-02-mtv/09_VM_Search.png[link=self, window=blank, width=100%]
 
@@ -147,18 +147,18 @@ image::2025_spring/module-02-mtv/10_VM_Select_VMWARE_Plan.png[link=self, window=
 
 . 마이그레이션 계획에 대한 세부 정보를 입력합니다. 일부 항목은 자동으로 채워지지만, 아래 값으로 수정하세요:
 
-* *Plan name*: move-webapp-vmware
-* *Target provider*: host
-* *Target namespace*: vmexamples-{user}
-* *Network map*: Pod Networking
-* *Storage map*: ocs-external-storagecluster-ceph-rbd
+* **Plan name**: move-webapp-vmware
+* **Target provider**: host
+* **Target namespace**: vmexamples-{user}
+* **Network map**: Pod Networking
+* **Storage map**: ocs-external-storagecluster-ceph-rbd
 +
 [NOTE]
 ====
 Network 및 Storage 맵은 소스 VM이 사용하는 리소스를 자동 감지하며, OpenShift 측에서 매핑 값을 올바르게 설정해 주어야 합니다.
 ====
 
-. *Create migration plan* 버튼 클릭
+. **Create migration plan** 버튼 클릭
 +
 image::2025_spring/module-02-mtv/11_Create_Migration_Plan.png[link=self, window=blank, width=100%]
 
@@ -166,19 +166,19 @@ image::2025_spring/module-02-mtv/11_Create_Migration_Plan.png[link=self, window=
 +
 image::2025_spring/module-02-mtv/12_Migration_Plan_Unready.png[link=self, window=blank, width=100%]
 
-. 몇 분 후 계획이 *Ready* 상태가 되면 파란색 "Start Migration" 버튼 클릭
+. 몇 분 후 계획이 **Ready** 상태가 되면 파란색 "**Start Migration**" 버튼 클릭
 +
 image::2025_spring/module-02-mtv/13_Migration_Plan_Ready.png[link=self, window=blank, width=100%]
 
-. 마이그레이션 시작 확인창이 뜨면 *Start* 클릭
+. 마이그레이션 시작 확인창이 뜨면 **Start** 클릭
 +
 image::2025_spring/module-02-mtv/14_Confirm_Migrate_Start.png[link=self, window=blank, width=100%]
 
-. 화면 중앙에 진행 상태 표시줄과 *0 of 3 VMs migrated* 메시지 표시
+. 화면 중앙에 진행 상태 표시줄과 **0 of 3 VMs migrated** 메시지 표시
 +
 image::2025_spring/module-02-mtv/15_VMs_Migrating.png[link=self, window=blank, width=100%]
 
-. *0 of 3 VMs migrated* 링크 클릭 시 세부 마이그레이션 상태 확인 가능
+. **0 of 3 VMs migrated** 링크 클릭 시 세부 마이그레이션 상태 확인 가능
 +
 image::2025_spring/module-02-mtv/16_VMs_Migrating_Details.png[link=self, window=blank, width=100%]
 
