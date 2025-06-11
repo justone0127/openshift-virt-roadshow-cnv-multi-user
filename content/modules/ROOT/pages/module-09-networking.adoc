@@ -16,9 +16,9 @@ NOTE: OpenShift 환경에는 이미 가상 머신이 연결될 수 있도록 각
 [[review]]
 == 환경 검토
 
-*Kubernetes NMState Operator*는 OpenShift Container Platform 클러스터의 노드에서 NMState를 사용한 상태 기반 네트워크 구성을 수행할 수 있도록 Kubernetes API를 제공합니다. 이 오퍼레이터는 다양한 네트워크 인터페이스 유형, DNS, 라우팅을 설정할 수 있는 기능을 제공하며, 클러스터 노드의 데몬은 각 노드의 네트워크 인터페이스 상태를 주기적으로 API 서버에 보고합니다.
+*Kubernetes NMState Operator* 는 OpenShift Container Platform 클러스터의 노드에서 NMState를 사용한 상태 기반 네트워크 구성을 수행할 수 있도록 Kubernetes API를 제공합니다. 이 오퍼레이터는 다양한 네트워크 인터페이스 유형, DNS, 라우팅을 설정할 수 있는 기능을 제공하며, 클러스터 노드의 데몬은 각 노드의 네트워크 인터페이스 상태를 주기적으로 API 서버에 보고합니다.
 
-. 좌측 메뉴에서 *Networking* > *NodeNetworkState*를 클릭하여 현재 구성을 확인합니다.
+. 좌측 메뉴에서 *Networking* > *NodeNetworkState* 를 클릭하여 현재 구성을 확인합니다.
 +
 image::2025_spring/module-09-networking/01_NodeNetworkState_List.png[link=self, window=blank, width=100%]
 
@@ -26,7 +26,7 @@ image::2025_spring/module-09-networking/01_NodeNetworkState_List.png[link=self, 
 +
 image::2025_spring/module-09-networking/02_NodeNetworkState_Info.png[link=self, window=blank, width=100%]
 
-. 우측 상단의 X 버튼을 눌러 브리지 정보를 닫습니다. 이 *br-flat* 브리지는 *Kubernetes NMState Operator*를 사용해 생성되었습니다. 좌측 메뉴에서 *NodeNetworkConfigurationPolicy*를 클릭해 더 살펴보세요.
+. 우측 상단의 X 버튼을 눌러 브리지 정보를 닫습니다. 이 *br-flat* 브리지는 *Kubernetes NMState Operator* 를 사용해 생성되었습니다. 좌측 메뉴에서 *NodeNetworkConfigurationPolicy* 를 클릭해 더 살펴보세요.
 +
 image::2025_spring/module-09-networking/03_NodeNetworkConfigurationPolicy_List.png[link=self, window=blank, width=100%]
 
@@ -34,7 +34,7 @@ image::2025_spring/module-09-networking/03_NodeNetworkConfigurationPolicy_List.p
 +
 image::2025_spring/module-09-networking/04_NodeNetworkConfigurationPolicy_Info.png[link=self, window=blank, width=100%]
 
-NOTE: *NodeNetworkConfigurationPolicy*는 노드 단위 구성을 수행하므로, 현재 사용자 권한으로는 수정할 수 없습니다. 따라서 관리자에게 문의하라는 메시지가 표시됩니다.
+NOTE: *NodeNetworkConfigurationPolicy* 는 노드 단위 구성을 수행하므로, 현재 사용자 권한으로는 수정할 수 없습니다. 따라서 관리자에게 문의하라는 메시지가 표시됩니다.
 
 . 이 브리지가 어떻게 생성되었는지 확인하려면 *YAML* 탭으로 전환해 정의를 확인합니다. 관리자라면 아래 YAML 스니펫처럼 유사한 브리지를 생성할 수 있습니다.:
 +
@@ -43,24 +43,25 @@ image::2025_spring/module-09-networking/05_NodeNetworkConfigurationPolicy_YAML.p
 [[nad]]
 == 네트워크 연결 정의 생성
 
-Linux Bridge를 가상 머신과 함께 사용하려면 *Network Attachment Definition*을 생성해야 합니다. 이 정의는 OpenShift에 해당 네트워크를 알리고, VM이 이를 통해 연결될 수 있도록 합니다. NAD는 생성된 프로젝트 범위 내에서만 적용되며, 해당 프로젝트 내에 배포된 VM만 이 정의에 접근할 수 있습니다. *default* 프로젝트에 NAD를 생성할 경우 클러스터 전역으로 사용 가능합니다. 이를 통해 관리자는 특정 사용자가 어떤 네트워크를 사용할 수 있을지 제어할 수 있습니다.
+Linux Bridge를 가상 머신과 함께 사용하려면 *Network Attachment Definition* 을 생성해야 합니다. 이 정의는 OpenShift에 해당 네트워크를 알리고, VM이 이를 통해 연결될 수 있도록 합니다. NAD는 생성된 프로젝트 범위 내에서만 적용되며, 해당 프로젝트 내에 배포된 VM만 이 정의에 접근할 수 있습니다. *default* 프로젝트에 NAD를 생성할 경우 클러스터 전역으로 사용 가능합니다. 이를 통해 관리자는 특정 사용자가 어떤 네트워크를 사용할 수 있을지 제어할 수 있습니다.
 
-NOTE: 네트워크 연결 정의는 OpenShift에 기존 네트워크 장치를 사용하도록 지시합니다. 여기서는 *br-flat*이라는 이름으로 이전에 생성된 장치를 사용하므로, 해당 이름을 그대로 사용해야 합니다. 그렇지 않으면 OpenShift는 해당 네트워크 장치가 있는 노드에서만 VM을 실행할 수 있기 때문에 배치를 실패하게 됩니다.
+NOTE: 네트워크 연결 정의는 OpenShift에 기존 네트워크 장치를 사용하도록 지시합니다. 여기서는 *br-flat* 이라는 이름으로 이전에 생성된 장치를 사용하므로, 해당 이름을 그대로 사용해야 합니다. 그렇지 않으면 OpenShift는 해당 네트워크 장치가 있는 노드에서만 VM을 실행할 수 있기 때문에 배치를 실패하게 됩니다.
 
-. 좌측 메뉴에서 *Network* > *Network Attachment Definitions*를 선택하고 *Create network attachment definition* 버튼을 클릭합니다.
+. 좌측 메뉴에서 *Network* > *Network Attachment Definitions* 를 선택하고 *Create network attachment definition* 버튼을 클릭합니다.
 +
 image::2025_spring/module-09-networking/06_NetworkAttachDefinition_Create.png[link=self, window=blank, width=100%]
 
 IMPORTANT: NAD를 생성할 때 반드시 *vmexamples-{user}* 프로젝트 내에 있어야 합니다.
 
-. 아래와 같이 *vmexamples-{user}* 프로젝트에 정의를 입력하고 *Create network attachment definition*을 클릭합니다.
+. 아래와 같이 *vmexamples-{user}* 프로젝트에 정의를 입력하고 *Create network attachment definition* 을 클릭합니다.
 * *Name*: flatnetwork
 * *Network Type*: Linux Bridge
 * *Bridge Name*: br-flat
 +
 image::2025_spring/module-09-networking/07_NetworkAttachDefinition_Create_Form.png[link=self, window=blank, width=100%]
 
-NOTE: 위 폼에는 *VLAN Tag Number* 입력란이 있으며, 이는 VLAN 태그가 필요한 네트워크에 연결할 때 사용됩니다. 본 실습에서는 태그 없는 네트워크를 사용하므로 입력할 필요가 없습니다.  
+NOTE: 위 폼에는 *VLAN Tag Number* 입력란이 있으며, 이는 VLAN 태그가 필요한 네트워크에 연결할 때 사용됩니다. 본 실습에서는 태그 없는 네트워크를 사용하므로 입력할 필요가 없습니다. 
+
 NOTE: 하나의 Linux Bridge는 여러 VLAN과 연동될 수 있으며, 이 경우 각 VLAN에 대해 NAD만 생성하면 됩니다. 별도의 브리지나 호스트 인터페이스는 필요하지 않습니다.
 
 . NAD의 세부 정보를 확인합니다. *vmexamples-{user}* 프로젝트에 생성된 것이므로 다른 프로젝트에서는 사용할 수 없습니다.
@@ -70,77 +71,27 @@ image::2025_spring/module-09-networking/08_NetworkAttachDefinition_Created.png[l
 [[attach]]
 == 가상 머신에 네트워크 연결
 
-. 좌측 메뉴에서 *VirtualMachines*로 이동하여 중앙 열에서 *fedora01* VM을 선택합니다. *Configuration* 탭을 클릭한 뒤 왼쪽 *Network* 탭을 선택합니다.
+. 좌측 메뉴에서 *VirtualMachines* 로 이동하여 중앙 열에서 *fedora01* VM을 선택합니다. *Configuration* 탭을 클릭한 뒤 왼쪽 *Network* 탭을 선택합니다.
 +
 image::2025_spring/module-09-networking/09_VM_Network_Tab.png[link=self, window=blank, width=100%]
 
-. *Add Network Interface*를 클릭하고 아래와 같이 입력한 뒤 *Save*를 클릭합니다.
+. *Add Network Interface* 를 클릭하고 아래와 같이 입력한 뒤 *Save* 를 클릭합니다.
 +
 image::2025_spring/module-09-networking/10_VM_Network_Attach.png[link=self, window=blank, width=100%]
 
-NOTE: 이 브리지는 외부 네트워크에 직접 연결되므로, NAT(masquerade) 기능을 사용하지 않아도 됩니다. 따라서 *type*은 *Bridge*로 설정합니다.
+NOTE: 이 브리지는 외부 네트워크에 직접 연결되므로, NAT(masquerade) 기능을 사용하지 않아도 됩니다. 따라서 *type* 은 *Bridge* 로 설정합니다.
 
 . *Actions* 메뉴나 *Play* 버튼을 사용해 VM을 시작하고, *Console* 탭에서 부팅 과정을 확인합니다.
 +
 image::2025_spring/module-09-networking/11_VM_Network_Startup.png[]
 
-*enp2s0* 인터페이스는 *192.168.64.0/18*의 flat 네트워크에서 IP 주소를 할당받습니다. 해당 네트워크에는 DHCP 서버가 있어 IP를 할당해 줍니다.
+*enp2s0* 인터페이스는 *192.168.64.0/18* 의 flat 네트워크에서 IP 주소를 할당받습니다. 해당 네트워크에는 DHCP 서버가 있어 IP를 할당해 줍니다.
 +
 image::2025_spring/module-09-networking/12_VM_Network_Console.png[link=self, window=blank, width=100%]
 
-. 동일한 방식으로 *fedora02* VM도 *flatnetwork*에 연결합니다.
+. 동일한 방식으로 *fedora02* VM도 *flatnetwork* 에 연결합니다.
 
 . 콘솔에서 *ping* 명령어를 사용해 두 VM(fedora01과 fedora02) 간의 직접 통신을 확인합니다.
 +
 image::2025_spring/module-09-networking/13_VM_Network_Ping.png[link=self, window=blank, width=100%]
 
-[[udn]]
-== 사용자 정의 네트워크 정의
-
-다양한 가상 머신 워크로드가 서로 다른 서브넷에 위치하거나 IP 충돌을 피해야 하는 경우가 있을 수 있습니다. 이럴 때는 동일한 브리지를 사용하더라도 *Network Attachment Definition*을 복수로 생성할 수 있으며, 이를 통해 IP 주소를 수동으로 할당하거나 DHCP 설정을 지정할 수 있습니다.
-
-아래 예시는 동일한 브리지 `br-flat`를 사용하되, 해당 네트워크를 통해 연결되는 VM에 대해 특정 서브넷과 DHCP 사용을 지정하는 사용자 정의 NAD입니다.
-
-. *Network Attachment Definitions* 페이지에서 *Create network attachment definition*을 클릭하고 YAML 편집기를 사용하여 다음을 입력합니다.
-+
-[source,yaml]
-----
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: static-flat
-  namespace: vmexamples-{user}
-spec:
-  config: '{
-    "cniVersion": "0.3.1",
-    "type": "bridge",
-    "bridge": "br-flat",
-    "ipam": {
-      "type": "static",
-      "addresses": [
-        {
-          "address": "192.168.70.10/18",
-          "gateway": "192.168.64.1"
-        }
-      ]
-    }
-  }'
-----
-+
-image::2025_spring/module-09-networking/14_NetworkAttachDefinition_Static.png[link=self, window=blank, width=100%]
-
-NOTE: 위의 구성은 IP 주소를 수동(static)으로 할당합니다. 단, 각 VM에 할당할 IP가 고유해야 하므로 동일한 설정을 여러 VM에 적용하지 않도록 주의하세요.
-
-. 이 NAD를 사용하여 새로운 네트워크 인터페이스를 갖는 VM을 생성하거나, 기존 VM에 추가로 연결할 수 있습니다. 이 경우에도 `Bridge` 모드를 사용해야 합니다.
-
-[[review]]
-== 요약 및 검토
-
-이 모듈에서는 OpenShift Virtualization 환경에서 가상 머신이 기본 SDN을 넘어 외부 네트워크와 연결되도록 설정하는 방법을 학습했습니다. 주요 내용은 다음과 같습니다:
-
-* OpenShift의 기본 SDN은 대부분의 워크로드에 충분하지만, 필요에 따라 물리 네트워크와 직접 연결해야 할 경우가 있습니다.
-* `Kubernetes NMState Operator`를 통해 노드에 Linux Bridge를 구성하고 관리할 수 있습니다.
-* 가상 머신이 브리지에 연결되도록 하기 위해 각 네임스페이스에 `Network Attachment Definition (NAD)`을 생성합니다.
-* 하나의 브리지를 기반으로 다양한 IP 관리 정책을 가진 복수의 NAD를 만들 수 있으며, 이는 특정 네트워크 요구사항에 맞춰 유연하게 사용할 수 있습니다.
-
-이제 OpenShift Virtualization에서 가상 머신의 네트워크를 더욱 정교하게 제어할 수 있는 기반을 마련했습니다. 다음 모듈에서는 이러한 네트워크 구성이 실무 환경에서 어떻게 적용될 수 있는지 더 구체적으로 살펴봅니다.
