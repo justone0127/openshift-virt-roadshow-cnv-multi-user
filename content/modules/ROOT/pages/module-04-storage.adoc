@@ -22,7 +22,7 @@ image::2025_spring/module-04-storage/00_Disk_Concepts.png[link=self, window=blan
 
 이번 실습에서는 방금 생성한 가상 머신 *fedora01*의 스토리지 구성을 자세히 살펴보겠습니다.
 
-. 왼쪽 메뉴에서 *Storage* -> *Persistent Volume Claims*를 클릭합니다. 네임스페이스가 *vmexamples-{user}*로 설정되어 있는지 확인하고, 이전 섹션에서 *fedora01* VM을 생성할 때 함께 생성된 PVC를 확인합니다.
+. 왼쪽 메뉴에서 **Storage** -> **Persistent Volume Claims**를 클릭합니다. 네임스페이스가 **vmexamples-{user}**로 설정되어 있는지 확인하고, 이전 섹션에서 **fedora01** VM을 생성할 때 함께 생성된 PVC를 확인합니다.
 +
 image::2025_spring/module-04-storage/01_PVC_List.png[link=self, window=blank, width=100%]
 
@@ -33,7 +33,7 @@ image::2025_spring/module-04-storage/01_PVC_List.png[link=self, window=blank, wi
 .. 요청한 용량과 실제 크기가 30GiB
 .. Access mode가 ReadWriteMany(RWX)
 .. Volume mode는 Block
-.. 스토리지 클래스는 *ocs-external-storagecluster-ceph-rbd*
+.. 스토리지 클래스는 **ocs-external-storagecluster-ceph-rbd**
 +
 image::2025_spring/module-04-storage/02_Fedora01_PVC_Details.png[link=self, window=blank, width=100%]
 
@@ -55,7 +55,7 @@ VM 스냅샷 기능을 통해 클러스터 관리자와 애플리케이션 개�
 
 === 스냅샷 생성 및 활용
 
-. *Virtualization* 퍼소나 드롭다운으로 돌아가 왼쪽 메뉴에서 *VirtualMachines*를 클릭합니다. 중앙 컬럼에서 프로젝트 *vmexamples-{user}*를 확장하고 *fedora01* 가상 머신을 선택합니다.
+. **Virtualization** 퍼소나 드롭다운으로 돌아가 왼쪽 메뉴에서 **VirtualMachines**를 클릭합니다. 중앙 컬럼에서 프로젝트 **vmexamples-{user}**를 확장하고 **fedora01** 가상 머신을 선택합니다.
 +
 image::2025_spring/module-04-storage/03_VM_Overview.png[link=self, window=blank, width=100%]
 
@@ -63,29 +63,29 @@ image::2025_spring/module-04-storage/03_VM_Overview.png[link=self, window=blank,
 +
 image::2025_spring/module-04-storage/04_Snapshots_Overview.png[link=self, window=blank, width=100%]
 
-. 상단의 *Snapshots* 탭으로 이동합니다.
+. 상단의 **Snapshots** 탭으로 이동합니다.
 +
 image::2025_spring/module-04-storage/05_Snapshot_Menu.png[link=self, window=blank, width=100%]
 
-. *Take snapshot* 버튼을 누르면 다이얼로그 창이 열립니다.
+. **Take snapshot** 버튼을 누르면 다이얼로그 창이 열립니다.
 +
 image::2025_spring/module-04-storage/06_VM_Snapshot_Dialog.png[link=self, window=blank, width=100%]
 +
-NOTE: *cloudinitdisk*는 일시적인 부트 디스크이므로 스냅샷에 포함되지 않으며, 이는 정상입니다.
+NOTE: **cloudinitdisk**는 일시적인 부트 디스크이므로 스냅샷에 포함되지 않으며, 이는 정상입니다.
 
-. Snapshot 이름은 자동으로 생성되며, *Save* 버튼을 누르면 *Operation complete* 상태가 표시될 때까지 기다립니다.
+. Snapshot 이름은 자동으로 생성되며, **Save** 버튼을 누르면 **Operation complete** 상태가 표시될 때까지 기다립니다.
 +
 image::2025_spring/module-04-storage/07_VM_Snapshot_Taken.png[link=self, window=blank, width=100%]
 
-. 점 3개 메뉴를 클릭하면, VM이 실행 중이므로 *Restore* 옵션이 비활성화(회색)되어 있음을 확인할 수 있습니다.
+. 점 3개 메뉴를 클릭하면, VM이 실행 중이므로 **Restore** 옵션이 비활성화(회색)되어 있음을 확인할 수 있습니다.
 +
 image::2025_spring/module-04-storage/08_VM_Restore_Disabled.png[link=self, window=blank, width=100%]
 
-. *Console* 탭으로 이동하여 VM에 로그인하고, 부팅 불가능한 상태로 만드는 작업을 수행합니다.
+. **Console** 탭으로 이동하여 VM에 로그인하고, 부팅 불가능한 상태로 만드는 작업을 수행합니다.
 +
 image::2025_spring/module-04-storage/09_Console_Login.png[link=self, window=blank, width=100%]
 +
-NOTE: *User name*, *Password*, *Paste to console* 버튼이 함께 제공되어 로그인 과정이 간편합니다.
+NOTE: **User name**, **Password**, **Paste to console** 버튼이 함께 제공되어 로그인 과정이 간편합니다.
 
 . 로그인 후 다음 명령을 실행합니다:
 +
@@ -100,29 +100,29 @@ image::2025_spring/module-04-storage/10_Bootloader_Broken.png[link=self, window=
 +
 IMPORTANT: 위 명령은 게스트 내부에서 OS를 종료시키지만, OpenShift Virtualization은 정책에 따라 자동으로 다시 시작시킵니다. 이 동작은 전체 또는 VM별로 변경할 수 있습니다.
 
-. 오른쪽 상단의 *Actions* 메뉴나 단축 버튼을 이용해 VM을 중지합니다. 정상 종료가 불가능한 상태이므로 *Force stop* 옵션을 이용해 강제로 중지합니다.
+. 오른쪽 상단의 **Actions** 메뉴나 단축 버튼을 이용해 VM을 중지합니다. 정상 종료가 불가능한 상태이므로 **Force stop** 옵션을 이용해 강제로 중지합니다.
 
-. *Overview* 탭에서 VM이 정지되었는지 확인하고, *Snapshots* 항목에 방금 생성한 스냅샷이 표시되는 것도 확인할 수 있습니다.
+. **Overview** 탭에서 VM이 정지되었는지 확인하고, **Snapshots** 항목에 방금 생성한 스냅샷이 표시되는 것도 확인할 수 있습니다.
 +
 image::2025_spring/module-04-storage/11_VM_Stopped_Snapshot.png[link=self, window=blank, width=100%]
 
-. *Snapshots* 항목에서 해당 스냅샷의 점 3개 메뉴를 클릭하면 VM이 정지된 상태이므로 *Restore* 옵션이 활성화되어 있습니다. 클릭합니다.
+. **Snapshots** 항목에서 해당 스냅샷의 점 3개 메뉴를 클릭하면 VM이 정지된 상태이므로 **Restore** 옵션이 활성화되어 있습니다. 클릭합니다.
 +
 image::2025_spring/module-04-storage/12_VM_Restore.png[link=self, window=blank, width=100%]
 
-. 열린 다이얼로그에서 *Restore*를 클릭합니다.
+. 열린 다이얼로그에서 **Restore**를 클릭합니다.
 +
 image::2025_spring/module-04-storage/13_VM_Restore_Dialog.png[link=self, window=blank, width=100%]
 
-. 복원이 완료될 때까지 기다립니다. *Snapshots* 탭에서 마지막 복원 작업의 세부 정보를 확인할 수 있습니다.
+. 복원이 완료될 때까지 기다립니다. **Snapshots** 탭에서 마지막 복원 작업의 세부 정보를 확인할 수 있습니다.
 +
 image::2025_spring/module-04-storage/14_VM_Restored.png[link=self, window=blank, width=100%]
 
-. *Overview* 탭으로 돌아가 VM을 시작합니다.
+. **Overview** 탭으로 돌아가 VM을 시작합니다.
 +
 image::2025_spring/module-04-storage/15_VM_Start.png[link=self, window=blank, width=100%]
 
-. *Console* 탭을 클릭하여 VM이 정상적으로 부팅되었는지 확인합니다.
+. **Console** 탭을 클릭하여 VM이 정상적으로 부팅되었는지 확인합니다.
 +
 image::2025_spring/module-04-storage/16_VM_Running.png[link=self, window=blank, width=100%]
 
@@ -131,29 +131,29 @@ image::2025_spring/module-04-storage/16_VM_Running.png[link=self, window=blank, 
 
 복제를 통해 새로운 VM을 생성할 수 있으며, 자체 디스크 이미지를 사용하지만 대부분의 설정과 데이터는 원본 VM과 동일합니다.
 
-. *Overview* 화면으로 돌아가 *Actions* 드롭다운 메뉴에서 *Clone* 옵션을 확인합니다.
+. **Overview** 화면으로 돌아가 **Actions** 드롭다운 메뉴에서 **Clone** 옵션을 확인합니다.
 +
 image::2025_spring/module-04-storage/17_Overview_Actions_Clone.png[link=self, window=blank, width=100%]
 
-. *Clone*을 클릭하면 다이얼로그가 열립니다. 복제 VM 이름을 *fedora02*로 지정하고, *Start VirtualMachine on clone* 체크박스는 해제된 상태로 둔 뒤 *Clone*을 클릭합니다.
+. **Clone**을 클릭하면 다이얼로그가 열립니다. 복제 VM 이름을 **fedora02**로 지정하고, **Start VirtualMachine on clone** 체크박스는 해제된 상태로 둔 뒤 **Clone**을 클릭합니다.
 +
 image::2025_spring/module-04-storage/18_VM_Clone_Dialog.png[link=self, window=blank, width=100%]
 
-. 새로운 VM이 생성되고 디스크가 복제되며 포털은 자동으로 새 VM 페이지로 이동합니다. *Created* 시간이 최근으로 표시됩니다.
+. 새로운 VM이 생성되고 디스크가 복제되며 포털은 자동으로 새 VM 페이지로 이동합니다. **Created** 시간이 최근으로 표시됩니다.
 +
 image::2025_spring/module-04-storage/19_VM_Cloned.png[link=self, window=blank, width=100%]
 +
 IMPORTANT: 복제된 VM은 원본 VM과 동일한 ID를 가지므로 외부 네트워크에 연결되었거나 동일 프로젝트에 있는 경우 충돌이 발생할 수 있습니다.
 
-. 상단의 *YAML* 메뉴를 클릭하면 이름은 *fedora02*로 변경되었지만, *fedora01*에서 가져온 레이블이 남아있는 것을 볼 수 있습니다.
+. 상단의 **YAML** 메뉴를 클릭하면 이름은 **fedora02**로 변경되었지만, **fedora01**에서 가져온 레이블이 남아있는 것을 볼 수 있습니다.
 +
 image::2025_spring/module-04-storage/20_Cloned_VM_YAML.png[link=self, window=blank, width=100%]
 
-. YAML 내 *app* 및 *kubevirt.io/domain* 값을 *fedora02*로 수정한 후 *Save*를 클릭합니다. 업데이트 알림이 나타납니다.
+. YAML 내 **app** 및 **kubevirt.io/domain** 값을 **fedora02**로 수정한 후 **Save**를 클릭합니다. 업데이트 알림이 나타납니다.
 +
 image::2025_spring/module-04-storage/21_Cloned_VM_YAML_Saved.png[link=self, window=blank, width=100%]
 
-. YAML 수정이 완료되면 VM을 시작하여 *fedora01*과 *fedora02* 두 VM이 모두 실행되도록 합니다.
+. YAML 수정이 완료되면 VM을 시작하여 **fedora01**과 **fedora02** 두 VM이 모두 실행되도록 합니다.
 +
 image::2025_spring/module-04-storage/22_Fedora02_Running.png[link=self, window=blank, width=100%]
 
