@@ -44,7 +44,7 @@ image::2025_spring/module-07-tempinst/03_Create_Custom_Template.png[link=self, w
 . **Clone template** 메뉴가 나타나면 아래 값을 입력하고 **Clone** 버튼을 클릭합니다:
 +
 * *Template name:* centos-stream9-server-db-small
-* *Template project:** vmexamples-{user}
+* *Template project:* vmexamples-{user}
 * *Template display name:* CentOS Stream 9 VM - Database Template Small
 * *Template provider:* Roadshow {user}
 +
