@@ -27,11 +27,11 @@
 +
 image::2025_spring/module-01-intro/00_Dev_Perspective.png[link=self, window=blank, width=100%]
 
-. 이제 왼쪽 상단의 *Developer*를 클릭하고 *Virtualization* 페르소나로 전환합니다.
+. 이제 왼쪽 상단의 **Developer**를 클릭하고 **Virtualization** 페르소나로 전환합니다.
 +
 image::2025_spring/module-01-intro/01_Virt_Perspective.png[link=self, window=blank, width=100%]
 
-. OpenShift Virtualization에 오신 것을 환영하는 소개 메시지가 표시됩니다. *Do not show this again* 체크 박스를 클릭하면 창이 사라집니다.
+. OpenShift Virtualization에 오신 것을 환영하는 소개 메시지가 표시됩니다. **Do not show this again** 체크 박스를 클릭하면 창이 사라집니다.
 +
 image::2025_spring/module-01-intro/02_Welcome_Virt.png[link=self, window=blank, width=100%]
 
