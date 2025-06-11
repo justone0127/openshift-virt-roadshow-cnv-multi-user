@@ -1,123 +1,130 @@
-= Welcome to {lab_name}!
+= {lab_name}에 오신 것을 환영합니다!
 
 [%hardbreaks]
-== Introduction
-OpenShift Virtualization enables you to bring virtual machines onto a modern, Kubernetes-based infrastructure. It enables the development and delivery of new applications as well as the modernization of existing ones and can create applications that consist of virtual machines, containers, and serverless functions - all managed together using Kubernetes-native tools and paradigms.
+== 소개
+OpenShift Virtualization은 가상 머신을 현대적인 Kubernetes 기반 인프라로 가져올 수 있도록 해줍니다. 이를 통해 새로운 애플리케이션을 개발 및 제공하고 기존 애플리케이션을 현대화할 수 있으며, 가상 머신, 컨테이너, 서버리스 기능으로 구성된 애플리케이션을 모두 Kubernetes 네이티브 도구와 패러다임으로 함께 관리할 수 있습니다.
 
-This roadshow event is organized to allow you to have a hands-on experience with Red Hat OpenShift Virtualization.
+이 로드쇼 이벤트는 Red Hat OpenShift Virtualization을 직접 체험할 수 있도록 구성되었습니다.
 
-In this event we will explore many common management activities that virtualization administrators often encounter in their day to day workflows.
+이번 이벤트에서는 가상화 관리자가 일상적으로 수행하는 일반적인 관리 작업들을 직접 다뤄보게 됩니다.
 
-== Who Will Benefit Most from attending a Roadshow?
+== 누가 로드쇼에서 가장 큰 혜택을 받을 수 있나요?
 
-*Virtual Machine Administrators* -- Those responsible for day to day management of virtual guests in OpenShift Virtualization. These users will often find themselves responsible for provisioning virtual guests, and day to day management of the guests, and the applications running within.
+*가상 머신 관리자(Virtual Machine Administrators)* -- OpenShift Virtualization에서 가상 게스트의 일상적인 관리를 담당하는 분들입니다. 이 사용자는 가상 머신의 프로비저닝과 그 안에서 실행되는 애플리케이션을 포함한 일상적인 관리를 수행하게 됩니다.
 
-*Virtual Infrastructure Administrators* -- Those responsible for the physical infrastructure hosting the OpenShift Virtualization solution. These users will be responsible for physical hardware, storage, and networking changes to the environment, that will affect the day to day operations of the running virtual machines.
+*가상 인프라 관리자(Virtual Infrastructure Administrators)* -- OpenShift Virtualization 솔루션을 호스팅하는 물리적 인프라를 관리하는 역할을 맡고 있습니다. 하드웨어, 스토리지, 네트워크와 관련된 변경을 수행하며, 이는 실행 중인 가상 머신의 운영에 영향을 줍니다.
 
-== What Content Is Covered In The Roadshow?
+== 로드쇼에서 다루는 내용은 무엇인가요?
 
-These are the *seven* main sections that will be covered:
+총 *7개*의 주요 섹션으로 구성되어 있습니다:
 
-* _Virtual Machine Management_: In this section we will provide a review of virtual machine management fundamentals, including creating a virtual machine, and modifying it's allotted resources.
+* _가상 머신 관리_: 이 섹션에서는 가상 머신 생성 및 자원 할당 변경 등 가상 머신 관리의 기본을 다룹니다.
 
-* _Migrating Existing Virtual Machines_: In this section, we will use the Migration Toolkit for Virtualization (MTV) to migrate virtual machines from an existing VMware vSphere environment to OpenShift Virtualization.
+* _기존 가상 머신 마이그레이션_: 이 섹션에서는 Migration Toolkit for Virtualization(MTV)를 활용하여 VMware vSphere 환경에서 OpenShift Virtualization으로 가상 머신을 마이그레이션합니다.
 
-* _Storage Management_: The storage paradigm familiar to many administrators changes with OpenShift Virtualization. This section will explore many actions related to storage management for virtual machines.
+* _스토리지 관리_: OpenShift Virtualization에서는 기존의 스토리지 패러다임이 변화합니다. 이 섹션에서는 가상 머신에 대한 스토리지 관리 작업을 다룹니다.
 
-* _Backup and Recovery for Virtual Machines_: This unit introduces and demonstrates additional concepts around backing up VMs to external sites and restoring them in the event of a disaster.
+* _가상 머신의 백업 및 복구_: 이 단원에서는 외부 사이트로의 VM 백업 및 재해 발생 시 복구 등의 개념을 소개하고 시연합니다.
 
-* _Template and InstanceType Management_: In order to streamline deployment of virtual machines, administrators will often create Templates or define InstanceTypes to ease deployment operations. This section will focus on those processes.
+* _템플릿 및 인스턴스 유형 관리_: 가상 머신 배포를 간소화하기 위해 관리자들은 종종 템플릿이나 인스턴스 유형을 정의합니다. 이 섹션에서는 이러한 작업에 집중합니다.
 
-* _Working with Virtual Machines and Applications_: In this section we will perform some day-2 activities with our imported virtual machines, by exposing our VM hosted applications through services and routes.
+* _가상 머신과 애플리케이션 작업하기_: 이 섹션에서는 가져온 가상 머신으로 day-2 작업을 수행하며, 서비스와 라우트를 통해 VM에서 실행 중인 애플리케이션을 노출합니다.
 
-* _Network Management_: By default VMs are connected to the pod network in OpenShift. In this section we will explore creating new L2 network mappings as well as making use of user defined networks (UDN) for direct network connectivity.
+* _네트워크 관리_: 기본적으로 VM은 OpenShift의 Pod 네트워크에 연결됩니다. 이 섹션에서는 L2 네트워크 매핑 생성과 사용자 정의 네트워크(UDN)를 통한 직접 네트워크 연결을 다룹니다.
 
-== What is OpenShift Virtualization?
+== OpenShift Virtualization이란?
 
-* All current subscribers receive OpenShift Virtualization as part of their OpenShift subscription. It has been generally available since OpenShift 4.5.
-* OpenShift Virtualization is based on the “container-native virtualization” technology being developed upstream under the KubeVirt project, an incubating project in the Cloud Native Computing Foundation (CNCF).
-* It leverages the Red Hat Enterprise Linux KVM hypervisor (RHEL KVM), which is a mature and highly performant open-source hypervisor used by many organizations and cloud service providers globally and which has been under development for over 15 years.
-* OpenShift Virtualization leverages the RHEL KVM hypervisor and allows the VM to be managed by Kubernetes and KubeVirt. An OpenShift Virtualization VM uses Kubernetes scheduling, network, and storage infrastructure.
+* 모든 구독자는 OpenShift 구독의 일부로 OpenShift Virtualization을 사용할 수 있습니다. OpenShift 4.5부터 일반적으로 제공되고 있습니다.
+* OpenShift Virtualization은 Cloud Native Computing Foundation(CNCF)의 인큐베이팅 프로젝트인 KubeVirt를 기반으로 한 “컨테이너 네이티브 가상화” 기술에 기반합니다.
+* RHEL KVM(Red Hat Enterprise Linux KVM) 하이퍼바이저를 사용합니다. 이는 오랜 시간 동안 개발되어온 고성능 오픈 소스 하이퍼바이저입니다.
+* Kubernetes와 KubeVirt를 통해 VM을 관리할 수 있으며, Kubernetes의 스케줄링, 네트워크, 스토리지 인프라를 그대로 활용합니다.
 
-* OpenShift Virtualization is SVVP certified with Microsoft for Windows guest support per the same rules that apply to Red Hat’s other KVM virtualization offerings.
-* OpenShift Virtualization is currently only supported on bare metal physical servers, typically on-premises or through supported cloud providers. Support for other topologies (OpenShift deployed on virtualized infrastructure like OpenStack or vSphere) is not available at this time.
-* OpenShift Virtualization allows OpenShift to deploy, manage, and connect virtual machines to resources in an OpenShift cluster. This includes the ability to connect to and manage those VMs using Kubernetes-native methods and take advantage of OpenShift features like Pipelines, GitOps, Service Mesh, and more.
+* OpenShift Virtualization은 Red Hat의 다른 KVM 가상화 제품과 동일하게 Windows 게스트 지원을 위해 Microsoft와 함께 SVVP 인증을 받았습니다.
+* 현재 OpenShift Virtualization은 온프레미스 또는 일부 클라우드 제공업체의 베어메탈 서버에서만 지원됩니다. 가상화 인프라(OpenStack, vSphere 등)에서 실행되는 OpenShift는 지원되지 않습니다.
+* OpenShift는 클러스터 내에서 가상 머신을 배포, 관리 및 연결할 수 있으며, Kubernetes 네이티브 방식으로 VM을 관리하고, OpenShift의 다양한 기능(Pipelines, GitOps, Service Mesh 등)을 사용할 수 있습니다.
 
-== Why switch from a traditional VM platform?
+== 왜 기존 VM 플랫폼에서 전환해야 하나요?
 
-**Adopt cloud-native development and/or cloud-native operations:**
-Red Hat OpenShift helps your team build applications with speed, agility, confidence, and choice. Code in production mode, anywhere you choose to build. Get back to doing work that matters.
+**클라우드 네이티브 개발/운영 채택:**
+Red Hat OpenShift는 애플리케이션을 빠르고 유연하게 개발하고 운영할 수 있도록 도와줍니다. 원하는 곳에서 프로덕션 수준으로 코드를 빌드하세요.
 
-**Complete app dev stack:**
-Red Hat OpenShift Dev Spaces (formerly Red Hat CodeReady Workspaces), Runtimes, Integration and Process Automation, Serverless, Pipelines, and more with security throughout.
+**완전한 애플리케이션 개발 스택:**
+Red Hat OpenShift Dev Spaces(구 CodeReady Workspaces), 런타임, 통합 및 프로세스 자동화, 서버리스, 파이프라인 등과 전체 보안 체계를 제공합니다.
 
-**Shift infrastructure spend to innovation:**
-OpenShift native architecture changes the heavyweight cost structure from SDDC legacy to lightweight container-native frameworks.
+**인프라 비용을 혁신에 집중:**
+OpenShift 네이티브 아키텍처는 전통적인 SDDC 구조의 고비용 구조를 경량의 컨테이너 기반 프레임워크로 전환시켜줍니다.
 
-**Risk mitigation:**
-With OpenShift support for on-premises and public cloud options, OpenShift is insurance against public cloud lock-in.
+**리스크 완화:**
+온프레미스와 퍼블릭 클라우드 모두를 지원하여 특정 클라우드 제공업체 종속을 방지합니다.
 
-**Independent from infrastructure:**
-Red Hat OpenShift runs consistently on bare metal, on-premises virtualization, or public cloud for ultimate choice and flexibility of deployment and updates.
+**인프라 독립성 확보:**
+베어메탈, 온프레미스 가상화, 퍼블릭 클라우드 등 다양한 환경에서 일관된 운영이 가능합니다.
 
-**Pure open source innovation:**
-The innovation in Kubernetes, serverless, service mesh, Kubernetes Operators, and more powered by the velocity of open source, with Red Hat in the lead.
+**순수 오픈 소스 혁신:**
+Kubernetes, 서버리스, 서비스 메시, Kubernetes Operators 등의 혁신을 Red Hat 주도로 오픈 소스 생태계의 속도로 누릴 수 있습니다.
 
-== Which OpenShift Subscription is right for me?
+== 내게 적합한 OpenShift 구독은?
 
-OpenShift is an inclusive platform wherein all of the features are accesible to end users at any time, but their usage is governed by the subscription that that user has purchased.
+OpenShift는 모든 기능을 모든 사용자에게 제공하지만, 사용 권한은 구매한 구독에 따라 다릅니다.
 
-Subscriptions for OpenShift fall into one of four categories, all of which provide access to OpenShift Virtualization:
+모든 구독 유형은 OpenShift Virtualization을 포함합니다. 다음은 네 가지 주요 구독 유형입니다:
 
-**Red Hat OpenShift Platform Plus** 
-is a unified platform to build, modernize, and deploy applications at scale. Multicluster security, compliance, application and data management work across infrastructures to provide consistency throughout the software supply chain. Red Hat OpenShift Platform Plus helps you work smarter and faster with a complete set of services for bringing apps to market on your hybrid cloud.
+**Red Hat OpenShift Platform Plus**  
+앱을 대규모로 빌드, 현대화, 배포하기 위한 통합 플랫폼입니다. 다중 클러스터 보안, 규정 준수, 애플리케이션 및 데이터 관리를 지원하며, 하이브리드 클라우드 전반에서 일관성을 제공합니다.
 
-**Red Hat OpenShift Container Platform**
-is a trusted, comprehensive, and consistent platform to develop, modernize, and deploy applications at scale, including today’s AI-enabled apps. Innovate faster with a complete set of services for bringing apps to market on your choice of infrastructure.
+**Red Hat OpenShift Container Platform**  
+신뢰성 있고 일관된 플랫폼으로, 현대화된 앱과 AI 기반 앱까지 개발하고 배포할 수 있습니다. 원하는 인프라 위에서 더 빠르게 혁신하세요.
 
-**Red Hat OpenShift Kubernetes Engine**
-provides you with the basic functionality of Red Hat OpenShift. It offers a subset of the features that Red Hat OpenShift Container Platform offers, like full access to an enterprise-ready Kubernetes environment and an extensive compatibility test matrix with many of the software elements that you might use in your datacenter.
+**Red Hat OpenShift Kubernetes Engine**  
+Red Hat OpenShift의 기본 기능을 제공합니다. 기업용 Kubernetes 환경과 다양한 데이터센터 소프트웨어 요소와의 호환성을 제공합니다.
 
-**Red Hat OpenShift Virtualization Engine**
-provides the proven virtualization functionality of Red Hat OpenShift to deploy, manage, and scale virtual machines (VMs). Only pay for what you need with a streamlined solution focused exclusively on VM workloads.
+**Red Hat OpenShift Virtualization Engine**  
+OpenShift의 검증된 가상화 기능만을 제공하여, VM 워크로드 중심의 환경에 적합하며 필요한 만큼만 비용을 지불하면 됩니다.
 
-The following chart explains the features that are entitled with each subscription and may help you decide which version of OpenShift is best for your environment.
+아래 표는 각 구독이 제공하는 기능을 비교하여 어떤 버전이 적합한지 결정하는 데 도움이 됩니다.
 
 image::2025_spring/index/01_openshift_comparison_chart.png[link=self, window=blank, width=100%]
 
-A full feature breakdown across all OpenShift editions can be found in the https://www.redhat.com/en/resources/self-managed-openshift-subscription-guide#section-13[subscription guide^].
+각 OpenShift 에디션의 전체 기능 비교는 다음 가이드를 참고하세요:  
+https://www.redhat.com/en/resources/self-managed-openshift-subscription-guide#section-13[구독 가이드^]
 
-== Next steps
+== 다음 단계
 
-If you would like to learn more about OpenShift Virtualization, please visit the https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization[landing page^], review the https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/about[documentation^], enjoy one of our https://www.redhat.com/en/interactive-experiences#virtualization[interactive experiences^], or view some of our demo videos on https://www.youtube.com/playlist?list=PLaR6Rq6Z4IqeQeTosfoFzTyE_QmWZW6n_[YouTube^].
+OpenShift Virtualization에 대해 더 알아보시려면 다음 자료를 확인하세요:
 
-== Requirements for the Lab Environment
+* https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization[소개 페이지^]
+* https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/about[공식 문서^]
+* https://www.redhat.com/en/interactive-experiences#virtualization[인터랙티브 체험^]
+* https://www.youtube.com/playlist?list=PLaR6Rq6Z4IqeQeTosfoFzTyE_QmWZW6n_[YouTube 데모 영상^]
 
-* Participant needs to have their own computer with a web browser and internet access.
-* Chromium based browsers are recommended as some copy/paste functions don't work in Firefox for the time being.
-* Remote access console uses the US keyboard layout by default, so it's good to know where special characters reside for other country's layouts, or to use the copy/paste function in a supported browser.
+== 실습 환경 요구사항
 
-=== Credentials for the OpenShift Console
+* 참가자는 웹 브라우저와 인터넷이 가능한 개인용 컴퓨터를 준비해야 합니다.
+* 일부 복사/붙여넣기 기능 문제로 인해 Chromium 기반 브라우저 사용을 권장합니다. Firefox에서는 일부 기능이 작동하지 않을 수 있습니다.
+* 원격 콘솔은 기본적으로 미국 키보드 레이아웃을 사용하므로, 다른 국가 키보드 사용자일 경우 특수문자의 위치를 알고 있어야 하며, 복사/붙여넣기 기능을 활용하는 것도 좋습니다.
 
-Your OpenShift cluster console is available {openshift_console_url}[here^].
+=== OpenShift 콘솔 자격 증명
 
-Your login is available with:
+OpenShift 클러스터 콘솔은 다음 링크에서 접속할 수 있습니다:  
+{openshift_console_url}[여기^]
 
-* *User:* {user}
-* *Password:* {password}
+로그인 정보:
 
-=== vCenter Access
+* *사용자:* {user}
+* *비밀번호:* {password}
 
-In the migration chapter of the lab, you will be asked to login and examine a https://{vcenter_console}[VMware vSphere^] environment.
+=== vCenter 접속 정보
 
-For access, please use the following credentials:
+마이그레이션 단원에서는 https://{vcenter_console}[VMware vSphere^] 환경에 로그인하여 확인하는 작업이 포함됩니다.
+
+접속 정보:
 
 * *vcenter_user:* {vcenter_full_user}
 * *vcenter_password:* {vcenter_password}
 
-=== Version Information
+=== 버전 정보
 
-This edition of the  OpenShift Virtualization Roadshow has been developed using the following software versions:
+이 OpenShift Virtualization Roadshow는 다음 소프트웨어 버전으로 구성되어 있습니다:
 
 * Red Hat OpenShift 4.18.3
 * Red Hat OpenShift Virtualization 4.18.0
@@ -125,4 +132,4 @@ This edition of the  OpenShift Virtualization Roadshow has been developed using 
 * Red Hat OADP 1.4.4
 * Red Hat Migration Toolkit for Virtual Machines 2.7.2
 
-(Accurate as of March 24, 2025)
+(2025년 3월 24일 기준)
