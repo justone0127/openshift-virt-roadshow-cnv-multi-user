@@ -401,7 +401,7 @@ image::2025_spring/module-07-tempinst/39_VM_Overview.png[link=self, window=blank
 
 다음 실습을 위해 리소스를 절약하려면 이 모듈에서 생성한 모든 VM을 중지하세요.
 
-. 좌측 메뉴에서 *Virtualization* 역할로 이동한 뒤 *Virtualmachines*를 클릭합니다.
+. 좌측 메뉴에서 *Virtualization* 역할로 이동한 뒤 *Virtualmachines* 를 클릭합니다.
 . VM 워크로드가 호스팅된 프로젝트들이 중간 트리 열에 나열됩니다. (*vmimported-{user}* 및 *vmexamples-{user}* 프로젝트를 최소한 확장하여 VM 상태를 확인하세요.)
 . 실행 중인 VM이 있다면, 중간 열에서 해당 VM을 선택하고 *Actions* 드롭다운 메뉴의 *Stop* 버튼 또는 옵션을 클릭합니다.
 . 이제 모든 VM이 *Stopped* 상태여야 합니다.
