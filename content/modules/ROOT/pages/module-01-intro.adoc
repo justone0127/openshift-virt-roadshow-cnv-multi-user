@@ -23,7 +23,7 @@
 [[virt_persona]]
 == Virtualization 페르소나로 전환
 
-. 처음 로그인하면 *Developer* 페르소나로 시작되며 소개 메시지가 표시됩니다. 창을 닫으려면 *Skip tour* 버튼을 클릭하세요.
+. 처음 로그인하면 **Developer** 페르소나로 시작되며 소개 메시지가 표시됩니다. 창을 닫으려면 *Skip tour* 버튼을 클릭하세요.
 +
 image::2025_spring/module-01-intro/00_Dev_Perspective.png[link=self, window=blank, width=100%]
 
