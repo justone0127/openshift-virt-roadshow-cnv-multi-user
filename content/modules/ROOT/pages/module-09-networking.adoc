@@ -94,7 +94,7 @@ NOTE: 하나의 Linux Bridge는 여러 VLAN과 연동될 수 있으며, 이 경�
 
 . NAD의 세부 정보를 확인합니다. *vmexamples-{user}* 프로젝트에 생성된 것이므로 다른 프로젝트에서는 사용할 수 없습니다.
 +
-image::2025_spring/module-09-networking/08_NetworkAttachDefinition_Created.png[link=self, window=blank, width=100%]
+image::2025_spring/module-09-networking/08_1_NetworkAttachDefinition_Created.png[link=self, window=blank, width=100%]
 
 [[attach]]
 == 가상 머신에 네트워크 연결
