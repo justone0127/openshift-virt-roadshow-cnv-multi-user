@@ -1,57 +1,53 @@
-
 image::2025_spring/conclusion/00_Thank_You.png[link=self, window=blank, width=100%]
 
-We hope you have enjoyed {lab_name} and learning more about *OpenShift Virtualization* and how it can be a useful tool for both the import and management of legacy virtual machines, as well as a stepping stone on the path of application modernization.
+{lab_name} 실습과 *OpenShift Virtualization*에 대해 배우는 시간을 즐기셨기를 바랍니다. OpenShift Virtualization은 기존 가상 머신을 가져오고 관리하는 데 유용할 뿐만 아니라 애플리케이션 현대화로 가는 여정의 디딤돌이 될 수 있는 강력한 도구입니다.
 
 [key_takeaways]
-== Key Takeaways
+== 주요 요점
 
-* OpenShift Virtualization is solution oriented, providing you with a mature, stable, and scalable solution that's easy to get started with.
+* OpenShift Virtualization은 솔루션 중심의 접근 방식을 제공하며, 시작하기 쉽고 성숙하고 안정적이며 확장 가능한 솔루션입니다.
 
-* OpenShift Virtualization is available at every subscription level of Red Hat OpenShift from OpenShift Platform Plus which provides a full hybrid cloud application development platform, to OpenShift Virtualization Engine, an offering that specializes in providing support for virtualized workloads.
+* OpenShift Virtualization은 Red Hat OpenShift의 모든 서브스크립션 레벨에서 사용할 수 있습니다. OpenShift Platform Plus는 하이브리드 클라우드 애플리케이션 개발 플랫폼을 제공하고, OpenShift Virtualization Engine은 가상화 워크로드를 지원하는 데 특화된 제품입니다.
 
-* OpenShift Virtualization is fully integrated with a broad ecosystem of partner products, with more coming on board each day. Check with your preferred hardware and software vendors to see if they support OpenShift Virtualization.
+* OpenShift Virtualization은 다양한 파트너 제품군과 완전히 통합되어 있으며, 매일 더 많은 제품이 지원되고 있습니다. 선호하는 하드웨어 및 소프트웨어 벤더가 OpenShift Virtualization을 지원하는지 확인해 보세요.
 
-* OpenShift Virtualization can help you set a strong foundation for tradtional workloads, while building skills for the future with a modern application platform.
-
+* OpenShift Virtualization은 기존 워크로드를 위한 견고한 기반을 제공하는 동시에, 현대적 애플리케이션 플랫폼을 통해 미래를 위한 역량을 개발하는 데 도움이 됩니다.
 
 [additional_info]
-== Additonal Information
+== 추가 정보
 
-=== Free Ebook: 15 Reasons to Adopt Red Hat OpenShift Virtualization
+=== 무료 전자책: Red Hat OpenShift Virtualization을 도입해야 하는 15가지 이유
 
-* Discover how virtualization infrastruture continues to evolve.
-* Explore options for migration of your existing virtual machines.
-* Take advantage of a large number of benefits across your organization.
-* Learn about deploying a consistent foundation for innovation.
-* Learn how to get started through no cost demonstrations or a Virtual Migration Assessment.
+* 가상화 인프라스트럭처가 어떻게 진화하고 있는지 확인하세요.
+* 기존 가상 머신의 마이그레이션 옵션을 살펴보세요.
+* 조직 전반에 걸쳐 얻을 수 있는 다양한 이점을 활용해 보세요.
+* 혁신을 위한 일관된 기반을 구축하는 방법을 알아보세요.
+* 무료 데모나 가상 마이그레이션 평가(Virtual Migration Assessment)를 통해 쉽게 시작할 수 있습니다.
 
-Click the link https://www.redhat.com/en/resources/15-reasons-adopt-openshift-virtualization-ebook[here^] or scan the QR code below to learn more:
+자세한 내용을 보려면 https://www.redhat.com/en/resources/15-reasons-adopt-openshift-virtualization-ebook[여기^]를 클릭하거나 아래 QR 코드를 스캔하세요:
 
 image::2025_spring/conclusion/01_Ebook.png[link=self, window=blank, width=50%]
 
-=== Red Hat Learning Services: DO317 Managing Virtual Machines with Red Hat OpenShift Virtualization
+=== Red Hat 교육 서비스: DO317 Red Hat OpenShift Virtualization을 통한 가상 머신 관리
 
-* Skills required to create, access, and manage VMs on OpenShift clusters.
-* Skills required to control usage and access of cpu, memory, storage, and networking resources from VMs using the same Kubernetes features that would also control usage and access to these resources for containers.
-* Sample architectures to manage High Availability (HA) of VMs using standard Kubernetes features and extensions from OpenShift Virtualization.
-* Strategies to connect VMs on OpenShift to data center services outside of their OpenShift cluster, such as storage and databases.
-* Strategies to migrate VMs from compatible hypervisors to OpenShift Virtualization by using the Migration Toolkit for Virtualization operator.
+* OpenShift 클러스터에서 가상 머신을 생성, 접근, 관리하는 데 필요한 기술.
+* 쿠버네티스 기능을 사용하여 컨테이너와 마찬가지로 CPU, 메모리, 스토리지, 네트워크 리소스의 사용 및 접근을 제어하는 데 필요한 기술.
+* OpenShift Virtualization에서 제공하는 확장 기능을 포함하여, 표준 쿠버네티스 기능을 사용한 고가용성(HA) 가상 머신 관리 아키텍처 샘플.
+* OpenShift 외부의 데이터 센터 서비스(예: 스토리지, 데이터베이스)와 가상 머신을 연결하기 위한 전략.
+* Virtualization Migration Toolkit Operator를 사용하여 호환 가능한 하이퍼바이저에서 OpenShift Virtualization으로 마이그레이션하는 전략.
 
-Click the link https://www.redhat.com/en/services/training/managing-virtual-machines-red-hat-openshift-virtualization-exam[here^] or scan the QR code below to learn more:
-
+자세한 내용을 보려면 https://www.redhat.com/en/services/training/managing-virtual-machines-red-hat-openshift-virtualization-exam[여기^]를 클릭하거나 아래 QR 코드를 스캔하세요:
 
 image::2025_spring/conclusion/02_DO317_Training.png[link=self, window=blank, width=50%]
 
-=== Virtualization Migration Assessment
+=== 가상화 마이그레이션 평가
 
-* A two-week onsite interactive workshop and follow-up report. 
-* Experienced Red Hat architects run a short series of onsite workshops to help develop your migration journey.
-* They provide an extensive review of your virtualization environment and it's current integrations including: networking, storage, security, backup, and disaster recovery.
-* You recieve a VMA report with a tailored proposal for your complete migration incluing high-level recommendations and design considerations.
-* This can help with understanding of where you're going, how you'll get there, how long it will take, and how much it will cost.
+* 2주간의 온사이트 상호작용 워크숍 및 후속 보고서 제공.
+* 숙련된 Red Hat 아키텍트가 온사이트 워크숍을 통해 마이그레이션 여정을 수립할 수 있도록 지원합니다.
+* 현재 사용 중인 가상화 환경과 그에 통합된 네트워크, 스토리지, 보안, 백업, 재해 복구 등 다양한 요소를 종합적으로 검토합니다.
+* 고수준의 권장 사항과 설계 고려사항이 포함된 전체 마이그레이션 제안서를 포함한 VMA 보고서를 받게 됩니다.
+* 이를 통해 어디로 가야 하는지, 어떻게 갈 것인지, 얼마나 걸릴 것인지, 비용은 얼마나 될지를 명확히 파악할 수 있습니다.
 
-Click the link https://www.redhat.com/en/resources/virtualization-migration-assessment-datasheet[here^] or scan the QR code below to learn more:
+자세한 내용을 보려면 https://www.redhat.com/en/resources/virtualization-migration-assessment-datasheet[여기^]를 클릭하거나 아래 QR 코드를 스캔하세요:
 
 image::2025_spring/conclusion/03_VMA_QR.png[link=self, window=blank, width=50%]
-
