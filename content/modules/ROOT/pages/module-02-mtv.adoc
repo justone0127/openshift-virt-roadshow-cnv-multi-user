@@ -1,138 +1,151 @@
-= Migrating Existing Virtual Machines
+= 기존 가상 머신 마이그레이션
 
-== Introduction
+== 소개
 
-This portion of our lab uses the https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/[Migration Toolkit for Virtualization^] (MTV) to import virtual machines from VMware vSphere to OpenShift. The migration toolkit supports two "modes" of import:
+이 실습 섹션에서는 https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/[Migration Toolkit for Virtualization^] (MTV)를 사용하여 VMware vSphere에서 OpenShift로 가상 머신을 가져옵니다. 마이그레이션 툴킷은 두 가지 "모드"의 가져오기를 지원합니다:
 
-* Cold migration turns off the source virtual machine before starting the migration. This is the default migration type.
-* Warm migration copies data while the source virtual machine continues to run. Once the bulk of data has been migrated, the VM is shutdown and the final data is copied to the destination. The new VM can then be started, resulting in a much shorter period of downtime for the VM-hosted application.
+* 콜드 마이그레이션은 마이그레이션을 시작하기 전에 소스 가상 머신을 종료합니다. 이는 기본 마이그레이션 유형입니다.
+* 웜 마이그레이션은 소스 가상 머신이 계속 실행 중인 상태에서 데이터를 복사합니다. 대부분의 데이터가 복사되면 VM을 종료하고 나머지 데이터를 대상에 복사합니다. 이후 새 VM을 시작할 수 있으며, 이를 통해 VM이 실행하는 애플리케이션의 다운타임을 매우 짧게 줄일 수 있습니다.
 
-NOTE: The migration toolkit has already been deployed to your cluster using the Operator available in OperatorHub.
+[NOTE]
+====
+*Migration Toolkit for Virtualization*은 이미 OperatorHub에서 사용할 수 있는 오퍼레이터를 통해 클러스터에 배포되어 있습니다.
+====
 
-Documentation for how to install and configure the Operator can be found https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/installing-the-operator_mtv[here^].
+MTV 오퍼레이터 설치 및 구성 방법은 다음 문서를 참고하세요: https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/installing-the-operator_mtv[링크^].
 
-If you would like to learn more about how to configure the Migration Toolkit for Virtualization for your own needs, please see the documentation at the following links for:
+MTV를 직접 구성하고자 하는 경우, 다음 링크에서 각각의 환경에 대한 요구사항을 확인하세요:
 
 * https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#openstack-prerequisites_mtv[OpenStack^]
 * https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#rhv-prerequisites_mtv[Red Hat Virtualization^]
 * https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.7/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#vmware-prerequisites_mtv[VMware vSphere^]
 
-.*Goals*
+.*목표*
 
-* Explore the VMware vSphere environment
-* Review the configuration for the Migration Toolkit for Virtualization (MTV)
-* Create a Migration Plan
-* Migrate VMs into OpenShift Virtualization
+* VMware vSphere 환경 살펴보기
+* Migration Toolkit for Virtualization(MTV)의 구성 확인
+* 마이그레이션 계획 생성
+* VM을 OpenShift Virtualization으로 마이그레이션
 
 [[prerequisites]]
-== Prerequisites for Migrations
+== 마이그레이션 사전 요구사항
 
-The following prerequisites apply to all migrations:
+모든 마이그레이션에 다음 사전 요구사항이 적용됩니다:
 
-* ISO images and CD-ROM disks must be unmounted.
-* Each NIC contains either an IPv4 address or an IPv6 address, although a NIC may use both.
-* The VM operating system must be certified and supported for use as a guest operating system for https://access.redhat.com/articles/973163#ocpvirt[OpenShift Virtualization^].
-* VM names must contain only lowercase letters (a-z), numbers (0-9), or hyphens (-), up to a maximum of 253 characters. The first and last characters must be alphanumeric. The name must not contain uppercase letters, spaces, periods (.), or special characters.
-* VM names must not duplicate the name of an existing VM in the OpenShift Virtualization environment.
+* ISO 이미지 및 CD-ROM 디스크는 언마운트되어 있어야 합니다.
+* 각 NIC는 IPv4 또는 IPv6 주소 중 하나 이상을 가지고 있어야 하며, 둘 다 사용할 수도 있습니다.
+* VM 운영 체제는 https://access.redhat.com/articles/973163#ocpvirt[OpenShift Virtualization^]의 게스트 OS로 인증 및 지원되어야 합니다.
+* VM 이름은 소문자(a-z), 숫자(0-9), 하이픈(-)만을 포함해야 하며, 최대 253자까지 가능합니다. 첫 글자와 마지막 글자는 영숫자여야 하며, 대문자, 공백, 마침표(.), 특수문자 등은 사용할 수 없습니다.
+* VM 이름은 OpenShift Virtualization 환경 내의 기존 VM 이름과 중복되어서는 안 됩니다.
 
-NOTE: The *Migration Toolkit for Virtualization* will automatically assign a new name to a VM that does not comply with the rules, doing so allows the migration to proceed without issue.
+[NOTE]
+====
+*Migration Toolkit for Virtualization*은 규칙을 위반한 VM 이름에 대해 자동으로 새 이름을 할당하여 마이그레이션이 문제 없이 진행되도록 합니다.
+====
 
 [[migrating_vms]]
-== Migrating Virtual Machines from VMware
+== VMware에서 가상 머신 마이그레이션
 
-A three-tier application has been deployed on VMware for you to migrate to OpenShift.
+OpenShift로 마이그레이션할 3계층 애플리케이션이 VMware에 배포되어 있습니다.
 
-The application consists of the following four virtual machines:
+이 애플리케이션은 다음 네 개의 가상 머신으로 구성되어 있습니다:
 
-* One HAproxy system that redirects traffic to the web servers.
-* One Linux system running a MariaDB database.
-* Two Microsoft Windows servers with IIS hosting a PHP application connecting to the database.
+* 트래픽을 웹 서버로 전달하는 HAproxy 시스템 1대
+* MariaDB 데이터베이스를 실행하는 Linux 시스템 1대
+* PHP 애플리케이션을 실행하며 데이터베이스에 연결하는 Microsoft Windows 서버 2대
 
-For this lab, you will be tasked with migrating three of the four virtual machines using cold migration.
+이 실습에서는 이 중 세 개의 VM을 콜드 마이그레이션 방식으로 마이그레이션하게 됩니다.
 
-NOTE: You will not need to migrate the HAproxy (load balancer) VM because OpenShift handles network traffic and load balancing natively for VMs connected to the SDN using a *Service*.
+[NOTE]
+====
+OpenShift는 SDN에 연결된 VM에 대해 네트워크 트래픽과 로드 밸런싱을 기본적으로 처리하므로 HAproxy(로드 밸런서) VM은 마이그레이션할 필요가 없습니다. 대신 *Service* 리소스를 통해 처리됩니다.
+====
 
-=== Review the VMware environment
+=== VMware 환경 확인
 
-To help understand the process of mapping resources, such as datastores and port groups, from vSphere into OpenShift's equivalents, storage classes and network attachment definitions, let's begin by reviewing the source environment for the migrations.
+vSphere의 데이터스토어 및 포트 그룹 등 리소스를 OpenShift의 스토리지 클래스 및 네트워크 연결 정의로 매핑하는 과정을 이해하기 위해 먼저 VMware 환경을 확인해 보겠습니다.
 
-. Navigate to VMware vCenter: https://{vcenter_console}[vCenter Console^]
-. Click on *Launch vSphere Client*
-. Login with the following credentials:
-- *User:* {vcenter_full_user}
-- *Password:* {vcenter_password}
+. VMware vCenter로 이동: https://{vcenter_console}[vCenter Console^]
+. *Launch vSphere Client* 클릭
+. 다음 자격 증명으로 로그인:
+- *사용자:* {vcenter_full_user}
+- *비밀번호:* {vcenter_password}
 
-. By default you'll land in the *Inventory* view at the top of the navigation tree with a message that you have no privileges to view this object. This is expected with the current user account.
+. 기본적으로 탐색 트리 상단의 *Inventory* 뷰로 이동되며, 현재 사용자 계정은 해당 오브젝트를 볼 수 없다는 메시지가 나올 수 있습니다. 이는 정상입니다.
 +
 image::2025_spring/module-02-mtv/00_VMware_First_Login.png[link=self, window=blank, width=100%]
 
-. Click the *Workloads* icon and expand the navigation tree until you see the folder named *Roadshow*, and the 4 VMs under it.
+. 왼쪽에서 *Workloads* 아이콘을 클릭하고 탐색 트리를 확장하여 *Roadshow* 폴더와 그 하위의 4개 VM을 확인합니다.
 +
 image::2025_spring/module-02-mtv/01_Workload_VM_List.png[link=self, window=blank, width=100%]
 
-. Click on the *VMs* icon at the top of the screen to see the details of each virtual machine in the folder.
+. 상단의 *VMs* 아이콘을 클릭하여 각 가상 머신의 세부 정보를 확인합니다.
 +
 image::2025_spring/module-02-mtv/02_VM_Details.png[link=self, window=blank, width=100%]
 
-. Change to the *Networks* view, then expand the tree to view the port group used by the virtual machines. Note that the name is *segment-migrating-to-ocpvirt*.
+. *Networks* 뷰로 이동한 후 트리를 확장하여 VM이 사용하는 포트 그룹을 확인합니다. 포트 그룹 이름은 *segment-migrating-to-ocpvirt*입니다.
 +
 image::2025_spring/module-02-mtv/03_vSphere_Network.png[link=self, window=blank, width=100%]
 
-. Finally, review the datastores in use by browsing to the *Datastores* view. Expand the tree to see the datastores that are attached to the *RS00* datacenter, and optionally browse to the *VMs* sub-tab to view the capacity used by each virtual machine.
+. 마지막으로 *Datastores* 뷰로 이동하여 *RS00* 데이터센터에 연결된 데이터스토어를 확인합니다. *VMs* 서브탭을 선택하면 각 가상 머신이 사용하는 용량도 볼 수 있습니다.
 +
 image::2025_spring/module-02-mtv/04_vSphere_Datastore.png[link=self, window=blank, width=100%]
 
-=== Review the VMware provider to the migration toolkit
+=== MTV에서 VMware 프로바이더 확인
 
-Now that we have completed our review of VMware vSphere and the virtual machines that reside there, you may close the window and return to your OpenShift web console.
+VMware vSphere 및 해당 VM 확인을 마쳤다면 해당 브라우저 탭을 닫고 OpenShift 웹 콘솔로 돌아옵니다.
 
-NOTE: The *Migration Toolkit for Virtualization (MTV)* is officially a separate tool from OpenShift Virtualization, and cannot be accessed from the *Virtualization* persona. 
+[NOTE]
+====
+*Migration Toolkit for Virtualization (MTV)*는 OpenShift Virtualization과는 별개의 도구이며, *Virtualization* 페르소나에서 접근할 수 없습니다.
+====
 
-. In the left-side menu, click on *Virtualization* and from the dropdown select *Administrator*.
+. 왼쪽 메뉴에서 *Virtualization* 클릭 후 드롭다운에서 *Administrator* 선택
 +
 image::2025_spring/module-02-mtv/05_Admin_Persona.png[link=self, window=blank, width=100%]
 
-. Navigate in the left menu to *Migration* -> *Providers for virtualization*
+. 왼쪽 메뉴에서 *Migration* -> *Providers for virtualization*으로 이동
 
-. Select project *mtv-{user}* at the top of the page.
+. 상단에서 프로젝트를 *mtv-{user}*로 선택
 +
 image::2025_spring/module-02-mtv/06_MTV_Providers.png[link=self, window=blank, width=100%]
 
-NOTE: MTV 2.4 and later are project/namespace aware and do not require administrator privileges. You can delegate VM imports to application teams and VM users so that they can self-serve and migrate at their own pace!
+[NOTE]
+====
+MTV 2.4 이상 버전은 프로젝트/네임스페이스를 인식하므로 관리자 권한이 필요하지 않습니다. 애플리케이션 팀이나 VM 사용자에게 권한을 위임하여 스스로 마이그레이션을 진행할 수 있습니다!
+====
 
-By default, there is a provider called *host* which represents *OpenShift Virtualization* as a target platform.
+기본적으로 *host*라는 프로바이더가 있으며 이는 *OpenShift Virtualization* 대상 플랫폼을 나타냅니다.
 
-Additionally, this lab has already been configured with an additional provider named *vmware* which you can see has an endpoint address of the VMware vSphere cluster we were just exploring.
+또한, 실습에서는 이미 *vmware*라는 추가 프로바이더가 구성되어 있으며, 방금 확인한 VMware vSphere 클러스터를 엔드포인트로 가지고 있습니다.
 
-=== Create a Migration Plan
+=== 마이그레이션 계획 생성
 
-Now that we have reviewed our environment, and have our providers created, it is time for us to create a *Migration Plan*. This plan selects which VMs to migrate from VMware vSphere to Red Hat OpenShift Virtualization and specifics about how to execute the migration.
+환경 및 프로바이더를 확인했으니 이제 *마이그레이션 계획*을 생성해 VMware vSphere에서 Red Hat OpenShift Virtualization으로 어떤 VM을 어떻게 마이그레이션할지 설정합니다.
 
-. Navigate in the left menu to *Migration* -> *Plans for virtualization* and press *Create Plan*.
+. 왼쪽 메뉴에서 *Migration* -> *Plans for virtualization*으로 이동 후 *Create Plan* 클릭
 +
 image::2025_spring/module-02-mtv/07_Create_VMWARE_Plan.png[link=self, window=blank, width=100%]
 
-. You will be asked to select the source provider that you intend to migrate from. Click on the *VMware* tile.
+. 마이그레이션할 소스 프로바이더를 선택하라는 메시지가 나오면 *VMware* 타일 클릭
 +
 image::2025_spring/module-02-mtv/08_VMware_Source_Provider.png[link=self, window=blank, width=100%]
 
-. A large number of virtual machines in the environment will be displayed, use the provided search bar and search for your user account: *{user}* to search for the VMs you'd like to select.
+. 환경 내 많은 VM 목록이 나타나면 상단 검색창에 *{user}*를 입력해 자신의 VM을 필터링
 +
-image::2025_spring/module-02-mtv/09_VM_Search.png[link=self, window=blank, width=100%] 
+image::2025_spring/module-02-mtv/09_VM_Search.png[link=self, window=blank, width=100%]
 
-. On the next page select the three VMs you would like to move:
+. 다음 화면에서 아래 세 개의 VM을 선택:
 
 * database-{user}
 * winweb01-{user}
 * winweb02-{user}
 
-. Click *Next*.
+. *Next* 클릭
 +
 image::2025_spring/module-02-mtv/10_VM_Select_VMWARE_Plan.png[link=self, window=blank, width=100%]
 
-. On the next screen you will be tasked with providing details for your migration plan. Several details will already be filled in for you, but you will have to make a few minor modifications to ensure that the VMs land in the correct namespace, and that the networks and storage options map correctly.
-+
-Please fill in your migration plan with the following values:
+. 마이그레이션 계획에 대한 세부 정보를 입력합니다. 일부 항목은 자동으로 채워지지만, 아래 값으로 수정하세요:
 
 * *Plan name*: move-webapp-vmware
 * *Target provider*: host
@@ -140,50 +153,50 @@ Please fill in your migration plan with the following values:
 * *Network map*: Pod Networking
 * *Storage map*: ocs-external-storagecluster-ceph-rbd
 +
-NOTE: Both the Network and Storage maps will automatically detect the Networks and Datastores that the discovered virtual machines currently make use of on the source provider. You will just need to make sure that their respective values are set correctly on the OpenShift side.
+[NOTE]
+====
+Network 및 Storage 맵은 소스 VM이 사용하는 리소스를 자동 감지하며, OpenShift 측에서 매핑 값을 올바르게 설정해 주어야 합니다.
+====
 
-. Click the *Create migration plan* button.
+. *Create migration plan* 버튼 클릭
 +
 image::2025_spring/module-02-mtv/11_Create_Migration_Plan.png[link=self, window=blank, width=100%]
 
-. You will be taken to a new screen where you will see that the plan for migration is being made ready.
+. 마이그레이션 계획이 준비 중인 화면으로 이동
 +
 image::2025_spring/module-02-mtv/12_Migration_Plan_Unready.png[link=self, window=blank, width=100%]
 
-. After a few moments the plan will become *Ready*, click on the blue "Start Migration" button to start the migration process.
+. 몇 분 후 계획이 *Ready* 상태가 되면 파란색 "Start Migration" 버튼 클릭
 +
 image::2025_spring/module-02-mtv/13_Migration_Plan_Ready.png[link=self, window=blank, width=100%]
 
-. You will be presented with a confirmation box to begin the migration, click on the *Start* button.
+. 마이그레이션 시작 확인창이 뜨면 *Start* 클릭
 +
 image::2025_spring/module-02-mtv/14_Confirm_Migrate_Start.png[link=self, window=blank, width=100%]
 
-. A progress bar will appear in the center of the screen along with the status of *0 of 3 VMs migrated*.
+. 화면 중앙에 진행 상태 표시줄과 *0 of 3 VMs migrated* 메시지 표시
 +
 image::2025_spring/module-02-mtv/15_VMs_Migrating.png[link=self, window=blank, width=100%]
 
-. Click on the *0 of 3 VMs migrated* link and you will be presented with a page with more details about the migration process.
+. *0 of 3 VMs migrated* 링크 클릭 시 세부 마이그레이션 상태 확인 가능
 +
 image::2025_spring/module-02-mtv/16_VMs_Migrating_Details.png[link=self, window=blank, width=100%]
 
-. You can click the drop-down arrow next to the name of each VM being migrated to get additional details about the stages of the migration process.
+. 각 VM 이름 옆 드롭다운 클릭 시 마이그레이션 단계별 상세 정보 확인
 +
 image::2025_spring/module-02-mtv/17_VM_Migration_Stages.png[link=self, window=blank, width=100%]
-+
 
-IMPORTANT: It is suggested to have a 10gbps network for virtual machine migrations which we do not have in our simulated lab environment. This, combined with having many participants performing the same task in parallel can cause this task to perform much slower than in a real environment. Please be patient with this process as it completes. You may continue with other sections in the roadshow as the migrations complete in the background. We will return to work with these machines in a later module.
+[IMPORTANT]
+====
+실제 환경에서는 10Gbps 네트워크를 사용하는 것이 권장되며, 본 실습 환경은 시뮬레이션된 환경으로 네트워크 속도가 느릴 수 있습니다. 여러 사용자가 동시에 작업하면 시간이 더 소요될 수 있으므로, 인내심을 가지고 기다려주세요. 마이그레이션이 진행되는 동안 다른 실습 섹션을 먼저 진행해도 됩니다. 이후 모듈에서 마이그레이션된 VM을 다룰 예정입니다.
+====
 
-. After several minutes we will see that the migration has completed successfully.
+. 수 분 후 마이그레이션이 성공적으로 완료됨
 +
 image::2025_spring/module-02-mtv/18_Completed_VMWARE_Plan.png[link=self, window=blank, width=100%]
 
-. The selected VMs have now been migrated and can be started on OpenShift Virtualization at your leisure.
+. 선택한 VM은 이제 OpenShift Virtualization에 마이그레이션되었으며, 원하는 시점에 실행할 수 있습니다.
 
-== Summary
+== 요약
 
-In this section we explored the Migration Toolkit for Virtualization, and used it to assist with the migration of existing virtual machines from a VMware vSphere environment to OpenShift Virtualization. In addition to the Migration Toolkit for Virtualization, there are two other migration toolkits currently available. The combination of these can be used to move many types of workloads into and within OpenShift clusters depending on your organization's needs.
-
-* https://docs.redhat.com/en/documentation/migration_toolkit_for_applications/7.2/html/introduction_to_the_migration_toolkit_for_applications/index[Migration Toolkit for Applications^] - Accelerate large-scale application modernization efforts to containers and Kubernetes.
-* https://https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/migration_toolkit_for_containers/about-mtc[Migration Toolkit for Containers^] - Migrate stateful application workloads between OpenShift clusters.
-
-For more information about these other migration toolkits, please reach out to your Red Hat account team.
+이 섹션에서는 Migration Toolkit for Virtualization을 살펴보고, VMware vSphere 환경의 기존 가상 머신을 OpenShift Virtualization으로 마이그레이션하는 작업을 수행했습니다. MTV 외에도 두 가지 마이그레이션 툴킷이 더 있으며, 이들은...
