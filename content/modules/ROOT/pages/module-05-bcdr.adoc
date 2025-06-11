@@ -26,38 +26,38 @@ NOTE: 이는 지원되는 백업 및 복구 솔루션을 제공하는 모든 파
 [[review_operator]]
 == OADP Operator 검토
 
-. 다시 Administrator 역할로 이동하여 왼쪽 메뉴에서 *Operators* → *Installed Operators* 를 클릭합니다. *oadp-{user}* 프로젝트가 선택되어 있는지 확인하고, *OADP*를 입력합니다.
+. 다시 Administrator 역할로 이동하여 왼쪽 메뉴에서 **Operators** → **Installed Operators** 를 클릭합니다. **oadp-{user}** 프로젝트가 선택되어 있는지 확인하고, **OADP**를 입력합니다.
 +
 image::2025_spring/module-05-bcdr/00_Left_Menu.png[link=self, window=blank, width=100%]
 
 . 해당 Operator를 클릭하여 상세 정보를 확인합니다.
 
-. *Provided APIs* 섹션을 검토합니다. 이 모듈에서는 *Backup* 및 *Restore* 기능을 사용할 예정입니다.
+. **Provided APIs** 섹션을 검토합니다. 이 모듈에서는 **Backup** 및 **Restore** 기능을 사용할 예정입니다.
 +
 image::2025_spring/module-05-bcdr/01_Overview.png[link=self, window=blank, width=100%]
 
-. 상단의 가로 스크롤바를 사용하여 *DataProtectionApplication* 탭으로 이동합니다. 이 오브젝트는 배포된 OADP 인스턴스의 구성을 나타냅니다.
+. 상단의 가로 스크롤바를 사용하여 **DataProtectionApplication** 탭으로 이동합니다. 이 오브젝트는 배포된 OADP 인스턴스의 구성을 나타냅니다.
 +
 image::2025_spring/module-05-bcdr/02_DPA.png[link=self, window=blank, width=100%]
 
-. *oadp-dpa*를 클릭하여 _DataProtectionApplication_ 의 세부 정보를 확인한 후 상단의 *YAML* 버튼을 클릭해 구성 내용을 확인합니다.
+. **oadp-dpa**를 클릭하여 _DataProtectionApplication_ 의 세부 정보를 확인한 후 상단의 **YAML** 버튼을 클릭해 구성 내용을 확인합니다.
 +
 image::2025_spring/module-05-bcdr/03_OADP_YAML.png[link=self, window=blank, width=100%]
 +
-*OADP*는 *kubevirt* 플러그인을 추가하여 구성되어 있으며, 클러스터에서 실행 중인 OpenShift Data Foundation이 제공하는 내부 오브젝트 스토리지 버킷을 사용하도록 설정되어 있습니다.
+**OADP**는 **kubevirt** 플러그인을 추가하여 구성되어 있으며, 클러스터에서 실행 중인 OpenShift Data Foundation이 제공하는 내부 오브젝트 스토리지 버킷을 사용하도록 설정되어 있습니다.
 +
 IMPORTANT: 실습에서는 편의를 위해 로컬 오브젝트 버킷에 백업하도록 구성되어 있지만, 실제 운영 환경에서는 외부 스토리지 시스템이나 클라우드 기반 오브젝트 스토리지 버킷을 사용하여 로컬 장애에 대비해야 합니다.
 
 [[create_backup]]
 == 가상 머신 백업 생성
 
-이제 앞에서 생성한 VM인 *fedora02* 를 백업합니다. 백업 대상 오브젝트는 *app* 및 *vm.kubevirt.io/name* 라벨로 정의됩니다. 이 라벨을 기반으로 VM 정의, 디스크, ConfigMap, Secret 등 관련 리소스들이 백업됩니다.
+이제 앞에서 생성한 VM인 **fedora02** 를 백업합니다. 백업 대상 오브젝트는 **app** 및 **vm.kubevirt.io/name** 라벨로 정의됩니다. 이 라벨을 기반으로 VM 정의, 디스크, ConfigMap, Secret 등 관련 리소스들이 백업됩니다.
 
-NOTE: 이전 단계를 완료하지 않아 *fedora02* VM이 없는 경우, 아래 YAML에서 라벨 셀렉터를 귀하의 환경에 맞게 수정하십시오.
+NOTE: 이전 단계를 완료하지 않아 **fedora02** VM이 없는 경우, 아래 YAML에서 라벨 셀렉터를 귀하의 환경에 맞게 수정하십시오.
 
-. *Operator details* 화면으로 돌아가 상단의 가로 스크롤바를 사용해 *Backup* 탭을 찾습니다.
+. **Operator details** 화면으로 돌아가 상단의 가로 스크롤바를 사용해 **Backup** 탭을 찾습니다.
 
-. *Backup* 탭을 클릭하고 *Create Backup* 버튼을 누릅니다.
+. **Backup** 탭을 클릭하고 **Create Backup** 버튼을 누릅니다.
 +
 image::2025_spring/module-05-bcdr/04_Backup_Tab.png[link=self, window=blank, width=100%]
 
@@ -90,28 +90,28 @@ spec:
   snapshotMoveData: false
 ----
 
-. 하단의 *Create* 버튼을 클릭합니다.
+. 하단의 **Create** 버튼을 클릭합니다.
 +
-위 YAML의 내용은 네임스페이스 *vmexamples-{user}* 에서 *app: fedora02* 라벨이 지정된 모든 오브젝트가 *DataProtectionApplication* 에 정의된 위치로 백업됨을 의미합니다.
+위 YAML의 내용은 네임스페이스 **vmexamples-{user}** 에서 **app: fedora02** 라벨이 지정된 모든 오브젝트가 **DataProtectionApplication** 에 정의된 위치로 백업됨을 의미합니다.
 +
 image::2025_spring/module-05-bcdr/05_Create_Backup_YAML.png[link=self, window=blank, width=100%]
 
-. *Status* 열이 *Completed* 로 변경될 때까지 기다립니다. 이는 백업이 성공적으로 완료되었음을 나타냅니다.
+. **Status** 열이 **Completed** 로 변경될 때까지 기다립니다. 이는 백업이 성공적으로 완료되었음을 나타냅니다.
 +
 image::2025_spring/module-05-bcdr/06_Backup_Completed.png[link=self, window=blank, width=100%]
 
 [[restore_backup]]
 == 백업에서 복원하기
 
-. 왼쪽 메뉴에서 *Virtualization* → *VirtualMachines* 를 클릭하고, 중앙 트리에서 *vmexamples-{user}* 프로젝트를 확장하여 *fedora02* VM을 클릭합니다.
+. 왼쪽 메뉴에서 **Virtualization** → **VirtualMachines** 를 클릭하고, 중앙 트리에서 **vmexamples-{user}** 프로젝트를 확장하여 **fedora02** VM을 클릭합니다.
 +
 image::2025_spring/module-05-bcdr/07_Fedora02_Overview.png[link=self, window=blank, width=100%]
 
-. 가상 머신을 정지시킨 후, 정지된 상태에서 *Actions* 드롭다운을 클릭하고 *Delete*를 선택합니다.
+. 가상 머신을 정지시킨 후, 정지된 상태에서 **Actions** 드롭다운을 클릭하고 **Delete**를 선택합니다.
 +
 image::2025_spring/module-05-bcdr/08_Delete_VM.png[link=self, window=blank, width=100%]
 
-. 팝업에서 빨간색 *Delete* 버튼을 클릭하여 삭제를 확인합니다.
+. 팝업에서 빨간색 **Delete** 버튼을 클릭하여 삭제를 확인합니다.
 +
 image::2025_spring/module-05-bcdr/09_Confirm_Delete.png[link=self, window=blank, width=100%]
 
@@ -119,9 +119,9 @@ image::2025_spring/module-05-bcdr/09_Confirm_Delete.png[link=self, window=blank,
 +
 image::2025_spring/module-05-bcdr/10_Deleted_VM.png[link=self, window=blank, width=100%]
 
-. *Operators* → *Installed Operators*로 이동하고 다시 *OADP Operator* 를 선택합니다. (*OADP-{user}* 프로젝트로 다시 전환이 필요할 수 있습니다.)
+. **Operators** → **Installed Operators**로 이동하고 다시 **OADP Operator** 를 선택합니다. (*OADP-{user}* 프로젝트로 다시 전환이 필요할 수 있습니다.)
 
-. 상단 탭에서 *Restore*를 찾아 클릭한 후 *Create Restore* 버튼을 누릅니다.
+. 상단 탭에서 **Restore**를 찾아 클릭한 후 **Create Restore** 버튼을 누릅니다.
 +
 image::2025_spring/module-05-bcdr/11_Restore_Tab.png[link=self, window=blank, width=100%]
 
@@ -151,11 +151,11 @@ spec:
 +
 image::2025_spring/module-05-bcdr/12_Create_Restore_YAML.png[link=self, window=blank, width=100%]
 
-. *Status* 열이 *Completed* 로 변경될 때까지 기다립니다.
+. **Status** 열이 **Completed** 로 변경될 때까지 기다립니다.
 +
 image::2025_spring/module-05-bcdr/13_Restore_Completed.png[link=self, window=blank, width=100%]
 
-. 다시 왼쪽 메뉴에서 *Virtualization* → *Virtual Machines* 를 클릭하여 *vmexamples-{user}* 프로젝트에서 *fedora02* 가상 머신이 복원되었는지 확인합니다. *Created* 값이 최근 시간으로 표시되어야 합니다.
+. 다시 왼쪽 메뉴에서 **Virtualization** → **Virtual Machines** 를 클릭하여 **vmexamples-{user}** 프로젝트에서 **fedora02** 가상 머신이 복원되었는지 확인합니다. **Created** 값이 최근 시간으로 표시되어야 합니다.
 +
 image::2025_spring/module-05-bcdr/14_VM_Restored.png[link=self, window=blank, width=100%]
 
