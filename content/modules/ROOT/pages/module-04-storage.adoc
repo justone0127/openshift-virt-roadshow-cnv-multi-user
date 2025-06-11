@@ -20,7 +20,7 @@ image::2025_spring/module-04-storage/00_Disk_Concepts.png[link=self, window=blan
 
 == VM에 대한 PVC 확인
 
-이번 실습에서는 방금 생성한 가상 머신 *fedora01*의 스토리지 구성을 자세히 살펴보겠습니다.
+이번 실습에서는 방금 생성한 가상 머신 **fedora01**의 스토리지 구성을 자세히 살펴보겠습니다.
 
 . 왼쪽 메뉴에서 **Storage** -> **Persistent Volume Claims**를 클릭합니다. 네임스페이스가 **vmexamples-{user}**로 설정되어 있는지 확인하고, 이전 섹션에서 **fedora01** VM을 생성할 때 함께 생성된 PVC를 확인합니다.
 +
