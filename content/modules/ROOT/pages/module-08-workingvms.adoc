@@ -1,61 +1,60 @@
-=  Working with Virtual Machines and Applications
+= 가상 머신 및 애플리케이션 다루기
 
-== Introduction
+== 소개
 
-This section of our lab is dedicated to the Day-2 operations that many administrators would need to perform when working with virtual machines in their OpenShift Virtualization environment. We will make use of the understanding we have developed throughout this roadshow of how VMs operate in an OpenShift environment, and use those skills to complete the tasks in this section. In this particular case, we are going to work with the three virtual machines that we imported from VMware vSphere earlier in this roadshow, and we are going to make some minor configuration changes to enable the applications hosted on those servers to be accessed as they now run in OpenShift Virtualization. To accomplish this, we will expose our applications using the service/route method that is the default when making use of the OpenShift SDN pod network so that the application is reachable from outside of the cluster. Doing so provides a more modernized approach to virtual machine management by directly exposing the applications that reside on the VMs.
+이번 실습 섹션에서는 OpenShift Virtualization 환경에서 가상 머신을 운영할 때 관리자가 수행해야 할 Day-2 운영 작업을 다룹니다. 지금까지의 Roadshow를 통해 OpenShift 환경에서 가상 머신이 어떻게 작동하는지를 이해했으므로, 해당 지식을 활용해 이번 섹션의 작업을 수행하게 됩니다. 이번에는 VMware vSphere에서 가져온 세 개의 가상 머신을 활용하며, 이 가상 머신에서 실행 중인 애플리케이션이 OpenShift Virtualization 내에서 외부에서 접근 가능하도록 일부 설정을 변경할 것입니다. 이를 위해 OpenShift SDN Pod 네트워크의 기본 방식인 서비스 및 라우트(Service/Route)를 사용하여 애플리케이션을 외부에 노출할 것입니다. 이러한 방식은 가상 머신에 호스팅된 애플리케이션을 직접 노출함으로써 보다 현대적인 방식의 가상 머신 관리를 가능하게 합니다.
 
 [[service_route]]
-== Exposing an Application with a Service/Route
+== 서비스/라우트를 사용한 애플리케이션 노출
 
-By default, virtual machines are connected to the SDN, which is a convenient and easy way to give them access to the rest of the network. However, it can be challenging for the virtual machines, and other pods in the OpenShift cluster, to find and connect to the virtualized applications. To solve this, we will use a *Service* to balance connections across the two Windows-based web servers, and create a DNS entry for each service discovery, then create a *Route* to allow external clients to access the application hosted within the virtual machines.
+기본적으로 가상 머신은 SDN에 연결되며, 이는 다른 네트워크와 통신하기에 간편하고 편리한 방법입니다. 하지만 OpenShift 클러스터 내 다른 가상 머신이나 파드가 해당 애플리케이션에 접근하기는 쉽지 않을 수 있습니다. 이를 해결하기 위해, 우리는 *Service* 를 생성하여 두 개의 Windows 기반 웹 서버 간 트래픽을 분산시키고, 서비스 디스커버리를 위한 DNS 항목을 만든 후, 외부 클라이언트가 해당 애플리케이션에 접근할 수 있도록 *Route* 를 생성할 것입니다.
 
-IMPORTANT: If you have not completed the module *Migrating Existing Virtual Machines*, it is recommended that you do that module first. If you have not completed it, or the migration process is still pending, you can use pre-existing virtual machines that have been prepared for you, which are available in the *vmimported-{user}* project. If you are using these pre-imported virtual machines, please replace all instances of the *vmexamples-{user}* namespace with *vmimported-{user}* in the examples below.
+IMPORTANT: *기존 가상 머신 마이그레이션* 모듈을 아직 완료하지 않았다면 먼저 해당 모듈을 수행하는 것을 권장합니다. 만약 아직 수행하지 않았거나 마이그레이션이 완료되지 않았다면, 미리 준비된 가상 머신을 사용할 수 있습니다. 해당 가상 머신은 *vmimported-{user}* 프로젝트에 있습니다. 사전 가져온 가상 머신을 사용하는 경우, 아래 예제의 *vmexamples-{user}* 네임스페이스를 *vmimported-{user}* 로 모두 대체해서 사용하세요.
 
-=== Introduction to Services
+=== 서비스 소개
 
-The *Service* identifies the source/target for traffic, and directs clients to the endpoints based on labels. Currently, the VMs do not have a label assigned yet.
+*Service* 는 트래픽의 소스 및 대상 엔드포인트를 식별하고, 라벨을 기반으로 클라이언트를 해당 엔드포인트로 라우팅합니다. 현재 가상 머신에는 아직 라벨이 부여되지 않았습니다.
 
-In order to successfully associate the  VMs with the Service, we need to do the following:
+가상 머신을 서비스와 성공적으로 연결하려면 다음 작업을 수행해야 합니다:
 
-* Add a label to the VMs. We will use the same label for both Windows IIS servers because they are both behind the same load balancer.
-* Create the service to make the two Windows IIS servers available for other workloads on the cluster. OpenShift will automatically make the load balancer internally accessible using the name of the Service as the DNS name.
-* Make the service available outside of OpenShift by creating a *Route*.
+* 가상 머신에 라벨을 추가합니다. 두 대의 Windows IIS 서버는 동일한 로드 밸런서 뒤에 있으므로 동일한 라벨을 사용합니다.
+* 클러스터 내 다른 워크로드에서 두 대의 Windows IIS 서버에 접근할 수 있도록 서비스를 생성합니다. OpenShift는 서비스 이름을 DNS 이름으로 사용해 내부 접근이 가능하도록 자동으로 설정합니다.
+* *Route*를 생성하여 OpenShift 외부에서 해당 서비스에 접근할 수 있도록 설정합니다.
 
-To begin, we'll add labels to the virtual machines by modifying their definition in the OpenShift Virtualization GUI.
+먼저 OpenShift Virtualization GUI에서 가상 머신 정의를 수정하여 라벨을 추가하겠습니다.
 
+=== 가상 머신에 라벨 추가하기
 
-=== Label the Virtual Machines
-
-. Click on *VirtualMachines* in the left-side column, and *start* your three imported virtual machines if they are not already running. You can verify this easily by sorting by the *Status* column in the right-side tree view.
+. 좌측 메뉴에서 *VirtualMachines* 를 클릭한 후, 가져온 세 개의 가상 머신이 실행 중이지 않다면 *시작(start)* 합니다. 오른쪽 뷰의 *Status* 열을 기준으로 정렬하여 쉽게 확인할 수 있습니다.
 +
 image::2025_spring/module-08-workingvms/11_Imported_VMs_List.png[link=self, window=blank, width=100%]
 +
-NOTE: Ensure you select the correct project, *vmexamples-{user}* if you completed the *Migrating Existing Virtual Machines* module or *vmimported-{user}* if you did not.
+NOTE: *기존 가상 머신 마이그레이션* 모듈을 완료한 경우 *vmexamples-{user}* 프로젝트를, 그렇지 않은 경우 *vmimported-{user}* 프로젝트를 선택하세요.
 
-. Select to the *winweb01-{user}* VM and navigate to the *YAML* tab.
-. Find the *spec:* section and under the *template.metadata* add the following to the *labels* section:
+. *winweb01-{user}* 가상 머신을 선택하고 *YAML* 탭으로 이동합니다.
+. *spec:* 항목을 찾고, *template.metadata* 아래의 *labels* 섹션에 다음 내용을 추가합니다:
 +
 [source,yaml,role=execute]
 ----
 env: webapp
 ----
 +
-IMPORTANT: Make sure to get the indentation exactly right - just like in the screenshot below.
+IMPORTANT: 들여쓰기를 정확히 맞춰야 합니다. 아래 스크린샷과 동일하게 입력하세요.
 +
 image::2025_spring/module-08-workingvms/12_Imported_VMs_YAML.png[link=self, window=blank, width=100%]
 
-. *Repeat* the process for the VM *winweb02-{user}*.
-. Ensure that both the *winweb01-{user}* and *winweb02-{user}* virtual machines are rebooted after the configuration change.
+. *winweb02-{user}* 가상 머신도 동일한 과정을 반복합니다.
+. 설정 변경 후 *winweb01-{user}* 와 *winweb02-{user}* 가상 머신을 모두 재시작합니다.
 +
-NOTE: Ensure the VMs are properly working by accessing to the console tab of each VM.
+NOTE: 각 가상 머신의 콘솔 탭에서 정상적으로 작동하는지 확인하세요.
 
-=== Create the Service
+=== 서비스 생성
 
-. In the left-side menu expand *Networking* and click on *Services*. On the screen that loads, click the *Create Service* button in the corner.
+. 좌측 메뉴에서 *Networking* 을 펼치고 *Services* 를 클릭합니다. 로드된 화면에서 우측 상단의 *Create Service* 버튼을 클릭합니다.
 +
 image::2025_spring/module-08-workingvms/13_Navigate_Service.png[link=self, window=blank, width=100%]
 
-. Replace the YAML with the following definition
+. YAML 내용을 아래 정의로 교체합니다:
 +
 [source,yaml,role=execute,subs="attributes"]
 ----
@@ -73,28 +72,28 @@ spec:
     targetPort: 80
 ----
 +
-IMPORTANT: Ensure the *namespace* with your virtual machines, *vmexamples-{user}* or *vmimported-{user}*, is the one used in the Service YAML.
+IMPORTANT: *vmexamples-{user}* 또는 *vmimported-{user}* 중 가상 머신이 포함된 네임스페이스를 정확히 입력해야 합니다.
 +
 image::2025_spring/module-08-workingvms/14_Service_YAML.png[link=self, window=blank, width=100%]
 
-. Click the *Create* button at the bottom. You will get a notification that the YAML has been saved.
-. From the details page for the newly created *webapp* Service, locate *Pod selector* link and click it.
+. 하단의 *Create* 버튼을 클릭합니다. YAML이 저장되었다는 알림이 표시됩니다.
+. 새로 생성된 *webapp* 서비스의 세부 정보 페이지에서 *Pod selector* 링크를 찾아 클릭합니다.
 +
 image::2025_spring/module-08-workingvms/15_Imported_VMs_PodSelector.png[link=self, window=blank, width=100%]
 
-. Verify the two Windows VMs are properly identified and targeted by the Service.
+. 두 대의 Windows 가상 머신이 정상적으로 식별되고 서비스에 연결되었는지 확인합니다.
 +
 image::2025_spring/module-08-workingvms/16_Imported_VMs_Pods.png[link=self, window=blank, width=100%]
 
-=== Create the Route
+=== 라우트 생성
 
-Now the Windows IIS servers are accessible from within the OpenShift cluster. Other virtual machines are able to access them using the DNS name **webapp.vmexamples-{user}**, which is determined by the name of the service + the namespace. However, since these web servers are the front end to an application, we want it to be externally accessible. This will be done by exposing it publicly using a *Route*.
+이제 Windows IIS 서버는 OpenShift 클러스터 내부에서 접근이 가능합니다. 다른 가상 머신은 **webapp.vmexamples-{user}** 라는 DNS 이름으로 해당 서비스에 접근할 수 있습니다. 그러나 이 웹 서버는 애플리케이션의 프론트엔드이므로 외부에서도 접근 가능해야 합니다. 이를 위해 *Route* 를 생성하여 외부 공개 접근을 설정합니다.
 
-. Under *Networking* now click on the *Routes* option in the left navigation menu.  Click the *Create Route* button in the center of the screen.
+. 좌측 네비게이션 메뉴의 *Networking* 아래에서 *Routes* 를 클릭합니다. 중앙의 *Create Route* 버튼을 클릭합니다.
 +
 image::2025_spring/module-08-workingvms/17_Route_Navigation.png[link=self, window=blank, width=100%]
 
-. Fill the form using the information below, scroll to the bottom and click the *Create* when done.
+. 아래 정보를 입력하고 하단으로 스크롤하여 *Create* 버튼을 클릭합니다:
 +
 .. *Name*: *route-webapp*
 .. *Service*: *webapp*
@@ -105,17 +104,17 @@ image::2025_spring/module-08-workingvms/17_Route_Navigation.png[link=self, windo
 +
 image::2025_spring/module-08-workingvms/18_Create_Route.png[link=self, window=blank, width=100%]
 
-. Navigate to the address shown in *Location* field
+. *Location* 필드에 표시된 주소로 접속합니다.
 +
 image::2025_spring/module-08-workingvms/19_Route_Access.png[link=self, window=blank, width=100%]
 
-. When the page loads, you will see an error, something must be wrong. This is because the Windows web servers are not able to currently connect to the database VM after it's migration.
+. 페이지가 로드되면 오류 화면이 표시됩니다. 무언가 문제가 발생한 것입니다. 이는 Windows 웹 서버가 마이그레이션 후 데이터베이스 가상 머신에 연결할 수 없기 때문입니다.
 +
 image::2025_spring/module-08-workingvms/20_WebApp_Error.png[link=self, window=blank, width=100%]
 +
-NOTE: To address our connectivity issue, we will need to create a service for the database VM so that it can be accessed by the web servers.
+NOTE: 연결 문제를 해결하려면 데이터베이스 가상 머신에 대한 서비스도 생성해야 합니다.
 
-. Once again, navigate to *Networking* -> *Services* and press *Create Service*. Replace the YAML with the following definition:
+. 다시 *Networking* -> *Services* 로 이동하여 *Create Service* 버튼을 클릭합니다. 아래 YAML로 내용을 교체합니다:
 +
 [source,yaml,role=execute,subs="attributes"]
 ----
@@ -135,13 +134,13 @@ spec:
 +
 image::2025_spring/module-08-workingvms/21_Database_YAML.png[link=self, window=blank, width=100%]
 +
-IMPORTANT: Ensure the namespace with your virtual machines, *vmexamples-{user}* or *vmimported-{user}* is the one used in the Service YAML.
+IMPORTANT: 가상 머신이 있는 네임스페이스( *vmexamples-{user}* 또는 *vmimported-{user}* )를 정확히 입력하세요.
 +
-. When the YAML is pasted, click the *Create* button.
-. Reload the webapp URL in your browser and expect to get the proper result of a working migrated web application.
+. YAML을 붙여넣은 후 *Create* 버튼을 클릭합니다.
+. 웹 애플리케이션 URL을 브라우저에서 다시 로드하면, 마이그레이션된 웹 애플리케이션이 정상적으로 동작하는 것을 확인할 수 있습니다.
 +
 image::2025_spring/module-08-workingvms/22_WebApp_Success.png[link=self, window=blank, width=100%]
 
-== Summary
+== 요약
 
-In this module you were able to experience working with the virtual machines that you migrated into the OpenShift Virtualization environment from VMware vSphere by making them accessible outside of the cluster in a more modernized approach by using the native services and routes features in Red Hat OpenShift.
+이번 모듈에서는 VMware vSphere에서 OpenShift Virtualization 환경으로 마이그레이션된 가상 머신을 실제로 다뤄보았습니다. OpenShift의 기본 기능인 서비스와 라우트를 활용하여 클러스터 외부에서 접근할 수 있도록 구성함으로써, 보다 현대화된 방식으로 가상 머신 기반 애플리케이션을 운영하는 방법을 경험하였습니다.
