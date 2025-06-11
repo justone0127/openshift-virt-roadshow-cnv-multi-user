@@ -15,7 +15,7 @@
 == 실습 준비
 
 . 다음에 수행할 작업을 위해 추가 VM 몇 대가 필요하므로, 공유 환경에 충분한 리소스를 확보하기 위해 기존의 *fedora01* 및 *fedora02* 가상 머신을 종료하도록 하겠습니다.
-. 좌측 메뉴에서 *Virtualization* 역할로 이동한 뒤, *Virtualmachines*를 클릭합니다.
+. 좌측 메뉴에서 *Virtualization* 역할로 이동한 뒤, *Virtualmachines* 를 클릭합니다.
 . VM 워크로드가 호스팅된 각 프로젝트가 중간 열의 트리 뷰에 나열됩니다. (최소한 *vmimported-{user}* 및 *vmexamples-{user}* 프로젝트를 확장하여 VM 상태를 확인해야 합니다.)
 . 실행 중(*Running*)인 VM이 있다면, 중간 트리 열에서 해당 VM을 선택하고, *Actions* 드롭다운 메뉴에서 *Stop* 버튼 또는 옵션을 클릭합니다.
 . 이제 모든 VM이 *Stopped* 상태여야 합니다.
@@ -27,7 +27,7 @@ image::2025_spring/module-07-tempinst/00_VMs_Stopped.png[link=self, window=blank
 
 기본적으로 Red Hat OpenShift Virtualization에서 제공하는 사전 구성된 템플릿은 수정할 수 없습니다. 하지만 템플릿을 복제하여 특정 워크로드에 맞도록 조정하여, 특정 유형의 가상 머신을 쉽게 요청할 수 있도록 할 수 있습니다. 이 섹션에서는 데이터베이스 서버용 사전 구성된 템플릿을 만들어 이를 실습해 보겠습니다.
 
-. 좌측 메뉴에서 *Templates*를 클릭하고, 프로젝트로 *openshift*를 선택합니다. *Show default projects* 버튼을 전환해야 *openshift* 프로젝트가 나타날 수 있습니다.
+. 좌측 메뉴에서 *Templates* 를 클릭하고, 프로젝트로 *openshift* 를 선택합니다. *Show default projects* 버튼을 전환해야 *openshift* 프로젝트가 나타날 수 있습니다.
 +
 image::2025_spring/module-07-tempinst/01_Project_Toggle.png[link=self, window=blank, width=100%]
 +
@@ -82,7 +82,7 @@ image::2025_spring/module-07-tempinst/10_Cloud_Init_Script.png[link=self, window
 
 . *Save* 버튼을 클릭하고, 녹색 *Saved* 메시지가 나타나면 *Apply* 버튼을 클릭합니다.
 
-. 이제 좌측 메뉴에서 *Catalog* 항목을 클릭한 뒤, *Template catalog → User templates*를 선택하면 생성한 템플릿이 타일로 표시됩니다.
+. 이제 좌측 메뉴에서 *Catalog* 항목을 클릭한 뒤, *Template catalog → User templates* 를 선택하면 생성한 템플릿이 타일로 표시됩니다.
 +
 image::2025_spring/module-07-tempinst/11_User_Templates.png[link=self, window=blank, width=100%]
 
@@ -94,7 +94,7 @@ image::2025_spring/module-07-tempinst/12_Quick_Create_Template.png[link=self, wi
 +
 image::2025_spring/module-07-tempinst/13_VM_From_Template.png[link=self, window=blank, width=100%]
 
-. 상단의 *Console* 탭을 클릭하고, 제공된 *Guest login credentials*를 사용하여, *Copy*와 *Paste to console* 버튼으로 VM 콘솔에 로그인합니다.
+. 상단의 *Console* 탭을 클릭하고, 제공된 *Guest login credentials* 를 사용하여, *Copy* 와 *Paste to console* 버튼으로 VM 콘솔에 로그인합니다.
 +
 image::2025_spring/module-07-tempinst/14_VM_Console.png[link=self, window=blank, width=100%]
 
@@ -107,7 +107,7 @@ sudo mysql -u root
 +
 image::2025_spring/module-07-tempinst/15_MariaDB_Login.png[link=self, window=blank, width=100%]
 
-. *Ctrl+D*를 두 번 눌러 VM에서 로그아웃합니다.
+. *Ctrl+D* 를 두 번 눌러 VM에서 로그아웃합니다.
 
 [[create_win]]
 == Windows VM 템플릿 만들기
@@ -135,9 +135,10 @@ image::2025_spring/module-07-tempinst/17_Windows_2k19_Dialog.png[link=self, wind
 * *Boot from CD* 체크박스 활성화
 * 드롭다운에서 *URL (creates PVC)* 선택
 * *image URL*: https://catalog-item-assets.s3.us-east-2.amazonaws.com/qcow_images/Windows2019.iso
-* CD 디스크 크기를 *5 GiB*로 축소
-* *Disk source*는 *Blank*로 기본값 *60 GiB* 유지
+* CD 디스크 크기를 *5 GiB* 로 축소
+* *Disk source* 는 *Blank* 로 기본값 *60 GiB* 유지
 * *Mount Windows drivers disk* 체크박스를 활성화 (**VirtIO 드라이버 설치에 필요합니다**)
++
 
 . 옵션 입력 완료 후 하단의 *Customize VirtualMachine* 버튼을 클릭합니다.
 +
@@ -155,7 +156,11 @@ image::2025_spring/module-07-tempinst/19a_Boot_BIOS.png[link=self, window=blank,
 +
 image::2025_spring/module-07-tempinst/20_Customize_Scripts.png[link=self, window=blank, width=100%]
 
-. 팝업 창이 열리면 *autounattend.xml* 섹션에 다음 코드를 복사하여 붙여넣습니다:
+. 새 템플릿에 대한 *ㄴysprep* 동작을 만들 수있는 새 창이 팝업됩니다.
++
+image::2025_spring/module-07-tempinst/21_Sysprep.png[link=self, window=blank, width=100%]
+
+. Windows 서버의 설치 ​​및 구성을 *AutounattEnd.xml* 섹션으로 자동화하는 데 도움이되는 다음 코드 블록을 복사하여 붙여 넣습니다.
 +
 [source,xml,role=execute]
 ----
