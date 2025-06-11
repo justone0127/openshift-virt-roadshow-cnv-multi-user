@@ -93,3 +93,54 @@ image::2025_spring/module-09-networking/12_VM_Network_Console.png[link=self, win
 . 콘솔에서 *ping* 명령어를 사용해 두 VM(fedora01과 fedora02) 간의 직접 통신을 확인합니다.
 +
 image::2025_spring/module-09-networking/13_VM_Network_Ping.png[link=self, window=blank, width=100%]
+
+[[udn]]
+== 사용자 정의 네트워크 정의
+
+다양한 가상 머신 워크로드가 서로 다른 서브넷에 위치하거나 IP 충돌을 피해야 하는 경우가 있을 수 있습니다. 이럴 때는 동일한 브리지를 사용하더라도 *Network Attachment Definition*을 복수로 생성할 수 있으며, 이를 통해 IP 주소를 수동으로 할당하거나 DHCP 설정을 지정할 수 있습니다.
+
+아래 예시는 동일한 브리지 `br-flat`를 사용하되, 해당 네트워크를 통해 연결되는 VM에 대해 특정 서브넷과 DHCP 사용을 지정하는 사용자 정의 NAD입니다.
+
+. *Network Attachment Definitions* 페이지에서 *Create network attachment definition*을 클릭하고 YAML 편집기를 사용하여 다음을 입력합니다.
++
+[source,yaml]
+----
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: static-flat
+  namespace: vmexamples-{user}
+spec:
+  config: '{
+    "cniVersion": "0.3.1",
+    "type": "bridge",
+    "bridge": "br-flat",
+    "ipam": {
+      "type": "static",
+      "addresses": [
+        {
+          "address": "192.168.70.10/18",
+          "gateway": "192.168.64.1"
+        }
+      ]
+    }
+  }'
+----
++
+image::2025_spring/module-09-networking/14_NetworkAttachDefinition_Static.png[link=self, window=blank, width=100%]
+
+NOTE: 위의 구성은 IP 주소를 수동(static)으로 할당합니다. 단, 각 VM에 할당할 IP가 고유해야 하므로 동일한 설정을 여러 VM에 적용하지 않도록 주의하세요.
+
+. 이 NAD를 사용하여 새로운 네트워크 인터페이스를 갖는 VM을 생성하거나, 기존 VM에 추가로 연결할 수 있습니다. 이 경우에도 `Bridge` 모드를 사용해야 합니다.
+
+[[review]]
+== 요약 및 검토
+
+이 모듈에서는 OpenShift Virtualization 환경에서 가상 머신이 기본 SDN을 넘어 외부 네트워크와 연결되도록 설정하는 방법을 학습했습니다. 주요 내용은 다음과 같습니다:
+
+* OpenShift의 기본 SDN은 대부분의 워크로드에 충분하지만, 필요에 따라 물리 네트워크와 직접 연결해야 할 경우가 있습니다.
+* `Kubernetes NMState Operator`를 통해 노드에 Linux Bridge를 구성하고 관리할 수 있습니다.
+* 가상 머신이 브리지에 연결되도록 하기 위해 각 네임스페이스에 `Network Attachment Definition (NAD)`을 생성합니다.
+* 하나의 브리지를 기반으로 다양한 IP 관리 정책을 가진 복수의 NAD를 만들 수 있으며, 이는 특정 네트워크 요구사항에 맞춰 유연하게 사용할 수 있습니다.
+
+이제 OpenShift Virtualization에서 가상 머신의 네트워크를 더욱 정교하게 제어할 수 있는 기반을 마련했습니다. 다음 모듈에서는 이러한 네트워크 구성이 실무 환경에서 어떻게 적용될 수 있는지 더 구체적으로 살펴봅니다.
