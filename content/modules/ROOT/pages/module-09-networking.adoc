@@ -168,15 +168,15 @@ UDN에 접근할 수 있는 파드를 생성하기 전에 반드시 네임스페
 
 이 작업은 클러스터 관리자에 의해 수행되어야 합니다. 다음과 같이 적절한 라벨(`k8s.ovn.org/primary-user-defined-network`)이 지정된 *vmexamples-{user}-udn* 네임스페이스가 할당되어 있다고 가정합니다.
 
-. *Networking*으로 이동한 다음 *UserDefinedNetworks*를 클릭하고 프로젝트 *vmexamples-{user}-udn*를 선택했는지 확인합니다.
+. *Networking* 으로 이동한 다음 *UserDefinedNetworks* 를 클릭하고 프로젝트 *vmexamples-{user}-udn* 를 선택했는지 확인합니다.
 +
 image::2025_spring/module-09-networking/14_UDN_List.png[link=self, window=blank, width=100%]
 
-. *Create*를 클릭하고 *UserDefinedNetwork*를 선택합니다.
+. *Create* 를 클릭하고 *UserDefinedNetwork* 를 선택합니다.
 +
 image::2025_spring/module-09-networking/15_UDN_Create.png[link=self, window=blank, width=100%]
 
-. 서브넷 *192.168.254.0/24*를 지정한 후 *Create* 버튼을 클릭합니다.
+. 서브넷 *192.168.254.0/24* 를 지정한 후 *Create* 버튼을 클릭합니다.
 +
 image::2025_spring/module-09-networking/16_UDN_Form.png[link=self, window=blank, width=100%]
 
@@ -184,12 +184,12 @@ image::2025_spring/module-09-networking/16_UDN_Form.png[link=self, window=blank,
 +
 image::2025_spring/module-09-networking/17_UDN_Created.png[link=self, window=blank, width=100%]
 +
-* 폼을 통해 생성할 경우 기본 이름은 *primary-udn*입니다.
+* 폼을 통해 생성할 경우 기본 이름은 *primary-udn* 입니다.
 * 기본적으로 L2이며, 현재 OpenShift Virtualization에서 지원되는 유일한 레이어입니다.
 * 역할(Role)은 primary입니다 (VM은 현재 primary 네트워크만 사용할 수 있습니다).
 * Network Attachment Definition(NAD)은 자동으로 생성됩니다.
 
-. 이제 왼쪽 메뉴에서 *NetworkAttachmentDefinitions*로 이동하여 해당 NAD가 자동으로 생성되었는지 확인합니다.
+. 이제 왼쪽 메뉴에서 *NetworkAttachmentDefinitions* 로 이동하여 해당 NAD가 자동으로 생성되었는지 확인합니다.
 +
 image::2025_spring/module-09-networking/18_UDN_NAD.png[link=self, window=blank, width=100%]
 
