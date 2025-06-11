@@ -389,7 +389,7 @@ image::2025_spring/module-07-tempinst/36_Select_InstanceType.png[link=self, wind
 image::2025_spring/module-07-tempinst/37_InstanceType_Resources.png[link=self, window=blank, width=100%]
 
 . 인스턴스 유형으로 VM을 프로비저닝 하기 위해서는 프로젝트를 **vmexamples-user1**로 변경한 상태에서 **Catalog**를 선택하여 진행해야합니다.
-
+image::2025_spring/module-07-tempinst/37_1_instance_type_project.png[link=self, window=blank, width=100%]
 
 . 인스턴스 유형으로 프로비저닝할 때 마지막으로 완료할 섹션은 템플릿 섹션과 유사합니다. VM 이름을 지정하고, 백업 디스크에 사용할 StorageClass를 선택해야 합니다. 기본 이름과 기본 StorageClass가 자동으로 선택되어 있습니다. 만족되면 **Create VirtualMachine** 버튼을 클릭합니다.
 +
