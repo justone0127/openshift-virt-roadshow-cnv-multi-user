@@ -108,7 +108,7 @@ image::2025_spring/module-01-intro/13_Create_VM_Templates.png[link=self, window=
 +
 image::2025_spring/module-01-intro/14_Create_VM_Quick.png[link=self, window=blank, width=100%]
 
-. 이름을 *fedora01*로 변경하고 *Quick create VirtualMachine*을 클릭합니다.
+. 이름을 **fedora01**로 변경하고 **Quick create VirtualMachine**을 클릭합니다.
 +
 image::2025_spring/module-01-intro/15_Create_VM_Quick_Name.png[link=self, window=blank, width=100%]
 
@@ -220,7 +220,7 @@ OpenShift Virtualization은 기존 가상화 솔루션과 달리 여러 VM 디�
 +
 image::2025_spring/module-01-intro/28_Pod_Name.png[link=self, window=blank, width=100%]
 
-. 해당 Pod의 상세 페이지가 나타납니다. Node라는 제목의 섹션에서 파드가 실행 중인 워커 노드 이름을 확인할 수 있습니다. 아래 스크린샷에서는 _worker-cluster-ttgmt-3_에서 실행되고 있습니다.
+. 해당 Pod의 상세 페이지가 나타납니다. Node라는 제목의 섹션에서 파드가 실행 중인 워커 노드 이름을 확인할 수 있습니다. 아래 스크린샷에서는 **_worker-cluster-ttgmt-3_**에서 실행되고 있습니다.
 +
 image::2025_spring/module-01-intro/29_Pod_Details_Node.png[link=self, window=blank, width=100%]
 
@@ -234,7 +234,7 @@ image::2025_spring/module-01-intro/30_VM_Dialog_Migrate.png[link=self, window=bl
 +
 image::2025_spring/module-01-intro/31_VM_Migrating.png[link=self, window=blank, width=100%]
 
-. 마이그레이션이 완료되면 VM 상태가 다시 Running으로 바뀌고, 이제는 다른 노드에서 실행됩니다. virt-launcher-fedora01-uuid 파드 이름을 클릭하여 이를 확인합니다.
+. 마이그레이션이 완료되면 VM 상태가 다시 Running으로 바뀌고, 이제는 다른 노드에서 실행됩니다. **virt-launcher-fedora01-uuid** 파드 이름을 클릭하여 이를 확인합니다.
 +
 image::2025_spring/module-01-intro/32_Migrated_Status.png[link=self, window=blank, width=100%]
 
