@@ -1,247 +1,252 @@
-= Virtual Machine Management
+= 가상 머신 관리
 
-== Introduction
+== 소개
 
-The beginning section of this lab will introduce you to the basics of creating and managing VMs in OpenShift Virtualization. Starting with OpenShift 4.18 there is a new Virtualization persona and a tree view for virtual machines that make it easier to visualize and manage your virtualization-based assets. After exploring the UI changes, you will see how the web console guides you through the whole process of creating a virtual machine from a pre-defined template. We will then review the properties of that VM, do some basic customizations, and perform actions like live migration, that are often expected of virtual machine administrators.
+이 실습의 첫 부분에서는 OpenShift Virtualization에서 VM을 생성하고 관리하는 기본 사항을 소개합니다. OpenShift 4.18부터는 가상화 자산을 보다 쉽게 시각화하고 관리할 수 있도록 새로운 가상화 페르소나와 가상 머신에 대한 트리 뷰가 제공됩니다. UI 변경 사항을 살펴본 후, 웹 콘솔이 사전 정의된 템플릿을 사용하여 가상 머신을 생성하는 전체 과정을 어떻게 안내하는지 확인하게 됩니다. 그런 다음 해당 VM의 속성을 검토하고, 몇 가지 기본 사용자 정의를 수행하며, 가상 머신 관리자에게 흔히 기대되는 라이브 마이그레이션과 같은 작업을 수행합니다.
 
-.*Goals*
+.*목표*
 
-* Create a new virtual machine
-* Review and modify resources for virtual machines
-* Understand how VM power states are managed using the OpenShift console
-* Live migrate a VM between two hosts
+* 새로운 가상 머신 생성
+* 가상 머신의 리소스 검토 및 수정
+* OpenShift 콘솔을 사용하여 VM 전원 상태를 관리하는 방법 이해
+* 두 호스트 간에 VM 라이브 마이그레이션 수행
 
-As a reminder, here are your credentials for the OpenShift Console:
+참고로, OpenShift 콘솔에 대한 여러분의 인증 정보는 다음과 같습니다:
 
-Your OpenShift cluster console is available {openshift_console_url}[here^].
+여러분의 OpenShift 클러스터 콘솔은{openshift_console_url}[here^]에서 사용할 수 있습니다.
 
-Your login is available with:
+로그인 정보는 다음과 같습니다:
 
 * *User:* {user}
 * *Password:* {password}
 
 [[virt_persona]]
-== Switch to the Virtualization Persona
+== Virtualization 페르소나로 전환
 
-. When you first log in, you will be placed in the *Developer* persona, with an introductory prompt. Click the *Skip tour* button to close the window.
+. 처음 로그인하면 *Developer* 페르소나로 시작되며 소개 메시지가 표시됩니다. 창을 닫으려면 *Skip tour* 버튼을 클릭하세요.
 +
 image::2025_spring/module-01-intro/00_Dev_Perspective.png[link=self, window=blank, width=100%]
 
-. Now, click on *Developer* in the upper left corner and switch to the *Virtualization* persona.
+. 이제 왼쪽 상단의 *Developer*를 클릭하고 *Virtualization* 페르소나로 전환합니다.
 +
 image::2025_spring/module-01-intro/01_Virt_Perspective.png[link=self, window=blank, width=100%]
 
-. You will be greated by an introductory prompt welcoming you to OpenShift Virtualization. Click the check box for *Do not show this again* and the window will disappear.
+. OpenShift Virtualization에 오신 것을 환영하는 소개 메시지가 표시됩니다. *Do not show this again* 체크 박스를 클릭하면 창이 사라집니다.
 +
 image::2025_spring/module-01-intro/02_Welcome_Virt.png[link=self, window=blank, width=100%]
 
 [[explore_virt]]
-== Exploring OpenShift Virtualization
+== OpenShift Virtualization 탐색
 
-When you arrive in the *Virtualization* view you will be on the *Overview* page which provides a high-level view of all virtualization resources currently in use, lets take a moment to explore.
+*Virtualization* 뷰에 도달하면 *Overview* 페이지에 있게 됩니다. 이 페이지는 현재 사용 중인 모든 가상화 리소스에 대한 높은 수준의 개요를 제공합니다. 잠시 탐색해보겠습니다.
 
 image::2025_spring/module-01-intro/03_Virt_Overview.png[link=self, window=blank, width=100%]
 
-NOTE: The *Virtualization* persona is available only when Red Hat OpenShift Virtualization is installed and properly configured. In this lab environment the installation and configuration has already been performed for us.
+NOTE: *Virtualization* 페르소나는 Red Hat OpenShift Virtualization이 설치되고 적절히 구성되었을 때만 사용할 수 있습니다. 이 실습 환경에서는 설치 및 구성이 이미 완료되어 있습니다.
 
-. Click on the *VirtualMachines* item in the left side menu and you will be presented with the virtualization tree view of all VM assets.
+. 왼쪽 메뉴에서 *VirtualMachines* 항목을 클릭하면 모든 VM 자산에 대한 가상화 트리 뷰가 표시됩니다.
 +
 image::2025_spring/module-01-intro/04_Tree_View.png[link=self, window=blank, width=100%]
 
-. Lets explore this page for a few moments: notice that this view is divided into 3 columns, the left-side management menu, the central column for organization of VM-based projects, and then the virtual machine view.
+. 이 페이지를 잠시 살펴보겠습니다. 이 뷰는 3개의 열로 나뉘어 있습니다. 왼쪽은 관리 메뉴, 가운데는 VM 기반 프로젝트 구성 영역, 오른쪽은 가상 머신 목록입니다.
 
-. The left menu is the main control for Virtualization integrated functions in OpenShift. We can see virtualization related items like the Catalog, Templates and InstanceTypes to build VMs from, and the menus to configure Storage and Netoworking for virtual machines.
+. 왼쪽 메뉴는 OpenShift에 통합된 Virtualization 기능을 제어하는 주요 메뉴입니다. VM을 생성하기 위한 Catalog, Templates, InstanceTypes 같은 항목과, 가상 머신의 스토리지 및 네트워크를 구성하기 위한 메뉴가 보입니다.
 +
 image::2025_spring/module-01-intro/05_Left_Menu.png[link=self, window=blank, width=100%]
 
-. The central column as mentioned is a project view. Like other objects in OpenShift, Projects (which are an abstraction for Kubernetes namespaces), are the boundaries for which permissions and other aspects of using and managing the resources are available to a user. By default there is a slider here that only shows projects with existing VMs. Currently the only project that we can see is *vmimported-{user}*, as it is the only project that we have access to with virtual machines in it.
+. 가운데 열은 프로젝트 뷰입니다. OpenShift의 다른 객체처럼, Projects(쿠버네티스 네임스페이스의 추상화)는 권한 및 리소스 사용 관리의 경계 역할을 합니다. 기본적으로 이곳에는 기존 VM이 있는 프로젝트만 표시되도록 필터가 설정되어 있습니다. 현재는 *vmimported-{user}* 프로젝트만 보입니다. 이는 해당 프로젝트에만 접근 권한이 있기 때문입니다.
 +
 image::2025_spring/module-01-intro/06_Project_Tree.png[link=self, window=blank, width=100%]
 
-. In the virtual machine overview column, it will list *All projects* by default, which shows us the VM's for every user in our shared cluster environment. You can sort by columns to make locating VM's easier, or even arrange which columns are visable to make organization easier. This view will change when you highlight a specific project or virtual machine in the center column.
+. 오른쪽의 가상 머신 뷰는 기본적으로 *All projects*가 선택되어 있어 클러스터의 모든 사용자 VM이 보입니다. 컬럼 정렬로 원하는 VM을 쉽게 찾을 수 있고, 컬럼 표시 여부도 조정할 수 있습니다. 가운데 열에서 특정 프로젝트나 VM을 선택하면 뷰가 변경됩니다.
 +
 image::2025_spring/module-01-intro/07_VM_List.png[link=self, window=blank, width=100%]
 
-. From the center column click on the project *vmimported-{user}* to see the virtual machines that are currently deployed and available to your specific user account.
+. 가운데 열에서 *vmimported-{user}* 프로젝트를 클릭하면 해당 사용자 계정에 배포된 가상 머신들을 볼 수 있습니다.
 +
 image::2025_spring/module-01-intro/08_VM_Imported_Project.png[link=self, window=blank, width=100%]
 +
-IMPORTANT: While the lab guide is configured to be dynamic and show your specific user account and project names whenever possible, the images in the lab guide are static and may show a different user, please perform these tasks in reference to your own user account and associated projects.
+IMPORTANT: 실습 가이드는 사용자 계정과 프로젝트명을 동적으로 반영하지만, 이미지들은 정적이며 다른 사용자를 보여줄 수 있습니다. 실제 작업은 본인의 사용자 계정과 프로젝트를 기준으로 진행해야 합니다.
 
-. The virtual machine overview column will update to only show the virtual machines in the *vmimported-{user}* project. You should see three VMs listed, but they are not currently turned on, these are for a later part of the lab.
+. 오른쪽 VM 개요 열은 이제 *vmimported-{user}* 프로젝트의 가상 머신만 보여줍니다. 현재는 세 개의 VM이 표시되지만 아직 시작되지는 않았습니다. 이는 이후 실습에서 사용할 것입니다.
 +
 image::2025_spring/module-01-intro/09_VMs_Stopped.png[link=self, window=blank, width=100%]
 
 [[create_project]]
-== Create a New Project
+== 새 프로젝트 생성
 
-. Before creating a VM we need to create a new project. Virtual machines are deployed to a specific project, or namespace, where by default, users without permission to the namespace cannot access, manage, or control them. Administrators can access all projects, and therefore view all virtual machines, however regular users must be given access to projects as needed.
+. VM을 만들기 전에 먼저 새 프로젝트를 생성해야 합니다. 가상 머신은 특정 프로젝트(또는 네임스페이스)에 배포되며, 기본적으로 해당 네임스페이스에 권한이 없는 사용자는 VM을 접근하거나 관리할 수 없습니다. 관리자만 모든 프로젝트에 접근 가능합니다.
 +
-. Click *Create Project* at the top right of the center tree view column.
+. 가운데 트리 뷰 상단 오른쪽의 *Create Project*를 클릭합니다.
 +
 image::2025_spring/module-01-intro/10_Column_Create.png[link=self, window=blank, width=100%]
 
-. In the *Name* field, type *vmexamples-{user}* to name the project, then click *Create*.
+. *Name* 필드에 *vmexamples-{user}*를 입력하고 *Create*를 클릭합니다.
 +
 image::2025_spring/module-01-intro/11_Create_Project.png[link=self, window=blank, width=100%]
 +
-NOTE: The virtual machine overview column is changed to view this new project immediately, but it does not currently show up in the center column as there are no VMs in the project and we the option to not show it is toggled on by default.
-
+NOTE: VM 개요 열은 즉시 새 프로젝트 뷰로 전환되지만, 이 프로젝트에는 아직 VM이 없어 가운데 열에는 표시되지 않습니다. 기존 VM이 있는 프로젝트만 표시하도록 설정되어 있기 때문입니다.
 
 [[create_vm]]
-== Create a Linux Virtual Machine
+== 리눅스 가상 머신 생성
 
-. From the virtual machine overview column, click on the *Create VirtualMachine* button and select *From template* from the drop-down menu.
+. 오른쪽 VM 개요 열에서 *Create VirtualMachine* 버튼을 클릭하고 드롭다운에서 *From template*을 선택합니다.
 +
-NOTE: VMs can also be created from an InstanceType wizard as well as created by entering a custom YAML definition, but for this current lab scenario we are going to stick with creating VMs based on existing templates.
+NOTE: VM은 InstanceType 마법사 또는 사용자 정의 YAML 정의를 통해서도 생성할 수 있지만, 이 실습에서는 템플릿을 사용하여 VM을 생성합니다.
 +
 image::2025_spring/module-01-intro/12_Create_VM_Button.png[link=self, window=blank, width=100%]
 
-. You will be taken to the *Catalog* screen, where a number of tiles will appear showing the available pre-defined VM templates.
+. *Catalog* 화면으로 이동하며, 미리 정의된 VM 템플릿이 타일 형태로 표시됩니다.
 +
-Reviewing the list of available templates you’ll notice that some have a blue badge which indicates _Source available_. These are templates which are using automatically downloaded and stored template source disks. 
+파란색 배지를 가진 템플릿은 _Source available_을 나타내며, 자동으로 다운로드되어 저장된 템플릿 디스크를 사용합니다.
 +
-If you were deploying in your own environment where you can customize the options available, you can choose to modify the availability of these boot sources by default, and/or remove these source disks, in favor of creating custom disks for your organization's needs.
+자체 환경에 배포할 경우 부트 소스의 기본 제공 여부를 조정하거나 삭제하고, 조직에 맞는 커스텀 디스크를 사용할 수 있습니다.
 +
 image::2025_spring/module-01-intro/13_Create_VM_Templates.png[link=self, window=blank, width=100%]
 
-. Select the *Fedora VM* tile, and a dialog opens.
+. *Fedora VM* 타일을 선택하면 대화 상자가 열립니다.
 +
 image::2025_spring/module-01-intro/14_Create_VM_Quick.png[link=self, window=blank, width=100%]
 
-. Change the name to *fedora01* and press *Quick create VirtualMachine*.
+. 이름을 *fedora01*로 변경하고 *Quick create VirtualMachine*을 클릭합니다.
 +
 image::2025_spring/module-01-intro/15_Create_VM_Quick_Name.png[link=self, window=blank, width=100%]
 
-. We will return to our tree view and see information about our new VM in the virtual machine overview column. Notice also that we now see our *vmexamples-{user}* project listed in the center column as it contains a VM, and that it is highlighted within the project.
+. 트리 뷰로 돌아와 새 VM의 정보가 오른쪽 VM 개요 열에 표시됩니다. 이제 *vmexamples-{user}* 프로젝트가 가운데 열에도 표시되며, VM이 포함되어 있기 때문입니다.
 +
-If we watch closely we can see the VM Status switch from *Provisioning* to *Starting* and finally *Running* in the virtual machine overview column when it is ready. 
+VM 상태가 *Provisioning* → *Starting* → *Running*으로 바뀌는 것을 확인할 수 있습니다.
 +
-During this time, the storage provider has cloned the template disk so that it can be used by the newly created virtual machine. The amount of time this takes can vary based on the storage provider being used to create the boot disk, and the current load on the system.
+이 과정에서 스토리지 공급자가 템플릿 디스크를 복제하여 새로운 VM이 사용할 수 있도록 만듭니다. 디스크 생성 시간은 스토리지 공급자와 시스템 부하에 따라 달라질 수 있습니다.
 +
 image::2025_spring/module-01-intro/16_Fedora_Running.png[link=self, window=blank, width=100%]
 
-. Once the virtual machine is running we can do some further exploration of the *Overview* page in the right side column.  
+. VM이 실행되면 오른쪽 열의 *Overview* 페이지를 탐색할 수 있습니다.
 +
-* *Details*: This tile shows us information about our VM, including it's name, status, creation time, OS, virtual resources, and the template from which it was created. It also contains a minature VNC terminal, and the ability to launch a fullscreen web console.
-* *General*: This tile shows us information specific to OpenShift, including the Namespace (Project), instance name, and Kubernetes pod where the guest is running.
-* *Snapshots*: This tile gives us information about any existing snapshots, and also has the button to quickly create a snapshot.
-* *Network*: This tile gives us the IP address of the virtual machine on the software-defined network (SDN) and it's internal hostname. If no advanced networks are defined, VMs are automatically attached to the pod network. Later in this lab we will explore advanced networking options, and how to customize connectivity for VMs.
-* *Utilization*: This tile gives us an overview of the resources currently in use by this virtual machine, including CPU, Memory, Storage, and Network throughput.
+* *Details*: VM의 이름, 상태, 생성 시간, OS, 리소스, 사용된 템플릿 등의 정보를 보여줍니다. 미니 VNC 터미널과 전체 화면 웹 콘솔을 실행하는 기능도 포함되어 있습니다.
+* *General*: 네임스페이스, 인스턴스 이름, 실행 중인 Kubernetes Pod 등의 OpenShift 관련 정보를 보여줍니다.
+* *Snapshots*: 스냅샷 정보를 제공하며 스냅샷 생성 버튼도 있습니다.
+* *Network*: SDN 상의 IP 주소와 내부 호스트명을 보여줍니다. 고급 네트워크가 정의되어 있지 않으면 기본적으로 pod 네트워크에 연결됩니다. 고급 네트워크 구성은 이후에 다룹니다.
+* *Utilization*: CPU, 메모리, 스토리지, 네트워크 등 자원 사용 현황을 보여줍니다.
 +
 image::2025_spring/module-01-intro/17_Fedora_Details.png[link=self, window=blank, width=100%]
 
-. After you are done looking at the VM details, click the *Events* tab to see some details of the provisioning process that just took place. If there are any issues with the creation of the VM, they will show up on this tab as well. The following events took place during creation:
+. VM 세부 정보를 모두 확인했다면 *Events* 탭을 클릭하여 방금 완료된 프로비저닝 과정의 이벤트를 확인할 수 있습니다. VM 생성에 문제가 있으면 이 탭에 표시됩니다. 생성 중 발생한 이벤트는 다음과 같습니다:
 +
 image::2025_spring/module-01-intro/18_Fedora_Events.png[link=self, window=blank, width=100%]
 +
-* A _DataVolume_ was created. _DataVolumes_ are used to manage the creation of a VM disk, abstracting the clone or import process onto OpenShift native storage during the virtual machine's creation workflow.
-* The new  _VM instance_ Fedora01 has been started.
+* _DataVolume_이 생성되었습니다. _DataVolume_은 VM 디스크 생성 시 클론 또는 가져오기 과정을 OpenShift 네이티브 스토리지 상에서 추상화합니다.
+* 새로운 _VM instance_ Fedora01이 시작되었습니다.
 
 [[admin_vms]]
-== Administering Virtual Machines
+== 가상 머신 관리
 
-Administering and using virtual machines is more than simply creating and customizing their configuration. As the platform administrator, we also need to be able to control the VM states and trigger live migrations so that we can balance resources, perform maintenance tasks, and reconfigure nodes.
+가상 머신을 관리하고 사용하는 것은 단순히 생성하고 구성하는 것 이상입니다. 플랫폼 관리자는 VM 상태를 제어하고 라이브 마이그레이션을 수행하여 리소스 균형 조정, 유지보수 작업, 노드 재구성 등을 해야 합니다.
 
-. Click the *Configuration* tab, this is the entry point to obtain more information about, and modify the resources of the virtual machine.
+. *Configuration* 탭을 클릭하면 VM 리소스에 대한 상세 정보 확인 및 수정을 할 수 있습니다.
 +
 image::2025_spring/module-01-intro/19_VM_Configuration.png[link=self, window=blank, width=100%]
 +
-It includes seven subtabs:
+총 7개의 서브탭이 포함되어 있습니다:
 +
 image::2025_spring/module-01-intro/20_Configuration_Tab.png[link=self, window=blank, width=100%]
 +
-* *Details*: This tab presents all of the physical features of the VM in a single panel. From here you can make edits to various descriptors and basic hardware configurations including modifying the cpu or memory, changing the hostname, attaching passthrough devices, and modifying the boot order.
-* *Storage*: This tab lists the disks attached to the system and allows you to add new disks to the system. If the guest is configured with the agent, it lists the filesystems and the utilization. Here it is possible to attach _ConfigMaps_, _Secrets_, and _Service Accounts_ as extra disks. This is useful when passing configuration data to the application(s) running in the virtual machine.
-* *Network*: This Tab shows the current network interfaces configured for the VM and allows for you to add new ones.
-* *Scheduling*: This tab includes advanced configuration options indicating where the VM should run and the strategy to follow for eviction. This tab is used to configure (anti)affinity rules, configure node selectors and tolerations, and other behaviors that affect which cluster nodes the VM can be scheduled to.
-* *SSH*: This tab allows you to configure remote access to the machine by creating an SSH service on a configured load-balancer, or by injecting public SSH keys if the feature is enabled.
-* *Initial run*: This tab allows us to configure _cloud-init_ for Linux or _sys-prep_ for Microsoft Windows, including setting the commands to be executed on the first boot, such as the injection of SSH keys, installation of applications, network configuration, and more.
-* *Metadata*: This tab shows current Labels and Annotations applied to the virtual machine. Modifying these values can help us tag our machines for specific purposes, or help us enable automated workflows by uniquely identifying machines.
+* *Details*: VM의 물리적 속성을 하나의 패널에서 보여줍니다. CPU, 메모리 수정, 호스트명 변경, 패스스루 디바이스 연결, 부팅 순서 설정 등이 가능합니다.
+* *Storage*: 시스템에 연결된 디스크 목록이 표시되며, 새로운 디스크 추가가 가능합니다. 에이전트가 구성된 경우 파일시스템 및 사용량도 표시됩니다. _ConfigMaps_, _Secrets_, _Service Accounts_를 디스크처럼 연결할 수 있습니다.
+* *Network*: 현재 설정된 네트워크 인터페이스가 표시되며, 새 인터페이스를 추가할 수 있습니다.
+* *Scheduling*: VM이 실행될 위치, 제거 전략 등을 설정할 수 있는 고급 구성 옵션입니다. (안티)어피니티, 노드 셀렉터, 토러레이션 등을 설정합니다.
+* *SSH*: SSH 서비스 설정 또는 공개 키 삽입으로 원격 접근을 구성할 수 있습니다.
+* *Initial run*: 리눅스의 _cloud-init_ 또는 윈도우의 _sys-prep_ 구성 설정 탭입니다. 초기 부팅 시 실행할 명령(SSH 키 삽입, 앱 설치, 네트워크 설정 등)을 설정할 수 있습니다.
+* *Metadata*: 현재 가상 머신에 적용된 Label 및 Annotation을 보여줍니다. 이를 통해 태깅이나 자동화 워크플로우에서 VM 식별이 가능합니다.
 
-. You can click on each of these to explore at your leisure, but for introductory purposes, lets focus on storage and networking specifically.
+. 각 항목을 클릭하여 자유롭게 탐색할 수 있지만, 입문 목적을 위해 이번에는 특히 스토리지와 네트워킹에 집중해보겠습니다.
 
-. List the disks associated with the VM by clicking on the *Storage* tab:
+. Storage 탭을 클릭하여 해당 가상 머신에 연결된 디스크 목록을 확인합니다:
 +
 image::2025_spring/module-01-intro/21_Storage_Tab.png[link=self, window=blank, width=100%]
 +
-In this environment, the default StorageClass, which defines the source and type of storage used for the disk, is called *ocs-external-storagecluster-ceph-rbd*. This storage is the default type provided by OpenShift Data Foundation (ODF) for running virtual machines. Each storage provider has different storage classes that define the characteristics of the storage backing the VM disk.
+이 환경에서 디스크에 사용되는 스토리지의 소스와 유형을 정의하는 기본 StorageClass는 ocs-external-storagecluster-ceph-rbd입니다. 이 스토리지는 OpenShift Data Foundation(ODF)이 제공하는 기본 유형으로, 가상 머신을 실행하는 데 사용됩니다. 스토리지 제공자마다 VM 디스크의 백엔드 스토리지 특성을 정의하는 서로 다른 StorageClass가 존재합니다.
 
-. Examine the network interfaces attached to the VM by clicking on the *Network* subtab:
+. Network 하위 탭을 클릭하여 해당 가상 머신에 연결된 네트워크 인터페이스를 확인합니다:
 +
 image::2025_spring/module-01-intro/22_Network_Tab.png[link=self, window=blank, width=100%]
 +
-When a VM is created, an interface on the *Pod Networking* network of type *masquerade* is created by default. This connects the VM to the SDN and provides access from the VM to outside the OpenShift cluster. Other VMs, and Pods, in the cluster can access the virtual machine using this interface.
+가상 머신이 생성되면, 기본적으로 masquerade 유형의 Pod Networking 네트워크 인터페이스가 하나 생성됩니다. 이 인터페이스는 VM을 SDN에 연결하고, OpenShift 클러스터 외부로의 접근을 가능하게 합니다. 클러스터 내의 다른 VM 및 파드(Pod)들도 이 인터페이스를 통해 해당 가상 머신에 접근할 수 있습니다.
 +
-Furthermore, a VM connected to the SDN can be accessed externally using a Route, or Service with type load balancer, or even have a Network Attachment Definition configured to allow direct access to external networks, a concept we will explore in more depth later.
+또한, SDN에 연결된 VM은 Route, LoadBalancer 유형의 Service, 또는 외부 네트워크에 직접 접근이 가능하도록 구성된 Network Attachment Definition 등을 통해 외부에서도 접근할 수 있습니다. 이에 대해서는 뒤에서 더 자세히 다룰 예정입니다.
 
 [[vm_state]]
-== Controlling Virtual Machine State
+== 가상 머신 상태 제어
 
-As a user with granted permissions to manage a  Virtualization environment: you can stop, start, restart, pause, and unpause virtual machines from the web console.
+Virtualization 환경을 관리할 수 있는 권한이 부여된 사용자는 웹 콘솔을 통해 가상 머신을 정지(Stop), 시작(Start), 재시작(Restart), 일시 중지(Pause), 일시 중지 해제(Unpause) 할 수 있습니다.
 
-. Click the *Overview* tab to return to the summary screen.
+. Overview 탭을 클릭하여 요약 화면으로 돌아갑니다.
 
-. In the top right corner you will notice shortcut buttons for running state: stop, restart, pause, and start. As well as a dropdown menu title *Actions*.
+. 오른쪽 상단에는 상태 제어를 위한 단축 버튼들(stop, restart, pause, start)과 Actions라는 드롭다운 메뉴가 표시됩니다.
 +
 image::2025_spring/module-01-intro/23_VM_State_Actions.png[link=self, window=blank, width=100%]
 +
-* *Stop*: Starts a graceful shutdown of the Virtual Machine.
-* *Restart*: This will send a signal to the operating system to reboot the Virtual Machine. Guest integrations are needed for this to work properly.
-* *Pause*: The process is frozen without further access to CPU resources and I/O, but the memory used by the VM at the hypervisor level will stay allocated.
-* *Start*: Starts up a stopped virtual machine. It will be greyed out if the machine is running.
 
-. While the shortcut buttons are handy, you can also access these options and more by clicking on the *Actions* menu and seeing the options available in the drop down list.
+Stop: 가상 머신을 정상 종료(Graceful Shutdown)합니다.
+
+Restart: 가상 머신 운영체제에 재부팅 신호를 보냅니다. 이를 위해서는 게스트 통합(Guest integrations)이 필요합니다.
+
+Pause: 가상 머신의 프로세스를 중단하고 CPU 및 I/O 접근을 차단하지만, VM의 메모리는 하이퍼바이저 수준에서 계속 유지됩니다.
+
+Start: 정지된 가상 머신을 시작합니다. 이미 실행 중이면 비활성화(회색)됩니다.
+
+. 단축 버튼 외에도, Actions 메뉴를 클릭하여 더 많은 제어 옵션을 확인할 수 있습니다.
 +
 image::2025_spring/module-01-intro/24_VM_Actions_Menu.png[link=self, window=blank, width=100%]
 
-. Press the *Stop* button and wait until the Virtual Machine is in state *Stopped*.
+. Stop 버튼을 눌러 가상 머신을 정지시키고, 상태가 Stopped가 될 때까지 기다립니다.
 +
 image::2025_spring/module-01-intro/25_VM_Stopped.png[link=self, window=blank, width=100%]
 
-. Clicking on *Actions*, the option *Start* appears, and the options *Restart* and *Pause* are greyed out.
+. Actions를 클릭하면 Start 옵션이 나타나고, Restart 및 Pause 옵션은 회색(비활성화)으로 표시됩니다.
 +
 image::2025_spring/module-01-intro/26_VM_Actions_List_Stopped.png[link=self, window=blank, width=100%]
 
-. Click *Start*, and wait for the *Running* status.
+. Start를 클릭하고, 상태가 Running으로 바뀔 때까지 기다립니다.
 
-. Using the *Actions* menu, or the shortcut button, press the *Pause* option. The Virtual Machine state will change to *Paused*.
+. Actions 메뉴 또는 단축 버튼을 사용하여 Pause 옵션을 클릭합니다. 가상 머신 상태가 Paused로 변경됩니다.
 +
 image::2025_spring/module-01-intro/27_VM_Actions_Paused.png[link=self, window=blank, width=100%]
 
-. Unpause the Virtual Machine using the *Actions* menu and the option *Unpause*, or by using the shortcut button.
+. Actions 메뉴에서 Unpause를 선택하거나 단축 버튼을 이용하여 가상 머신을 다시 실행합니다.
 
 [[live_migrate]]
-== Live Migrate a Virtual Machine
+== 가상 머신 라이브 마이그레이션
 
-In this section, we will migrate the VM from one OpenShift node to another without shutting down the VM. Live migration requires *ReadWriteMany* (RWX) storage so that the VM disks can be mounted on both the source and destination nodes at the same time. OpenShift Virtualization, unlike other virtualization solutions that you may be familiar with, does not use monolithic datastores mounted to each cluster member that hold many VM disks for many different VMs. Instead, each VM disk is stored in its own volume that is only mounted when and where it's needed.
+이번 섹션에서는 가상 머신을 종료하지 않고 OpenShift의 한 노드에서 다른 노드로 마이그레이션하는 라이브 마이그레이션을 수행합니다. 라이브 마이그레이션에는 VM 디스크가 소스와 대상 노드 양쪽에 동시에 마운트될 수 있도록 ReadWriteMany(RWX) 스토리지가 필요합니다.
+OpenShift Virtualization은 기존 가상화 솔루션과 달리 여러 VM 디스크를 공유하는 단일 데이터스토어를 모든 노드에 마운트하지 않습니다. 대신, 각 VM 디스크는 필요할 때만 특정 노드에 마운트되는 개별 볼륨에 저장됩니다.
 
-. To see the physical node that the virtual machine is running on, click on the *Pod* name _virt-launcher-fedora01-uuid_ found under the *General* tile on the *Overview* page.
+. 가상 머신이 실행 중인 실제 노드를 확인하려면, Overview 페이지의 General 섹션에서 virt-launcher-fedora01-uuid 이름의 Pod를 클릭합니다.
 +
 image::2025_spring/module-01-intro/28_Pod_Name.png[link=self, window=blank, width=100%]
 
-. This will bring up the Pod details page. Search for the section header called *Node* and see the name of the worker that the pod is running on. In this screenshot it is running on _worker-cluster-ttgmt-3_.
+. 해당 Pod의 상세 페이지가 나타납니다. Node라는 제목의 섹션에서 파드가 실행 중인 워커 노드 이름을 확인할 수 있습니다. 아래 스크린샷에서는 _worker-cluster-ttgmt-3_에서 실행되고 있습니다.
 +
 image::2025_spring/module-01-intro/29_Pod_Details_Node.png[link=self, window=blank, width=100%]
 
-. Click the back button in your browser to return to the *Overview* page. 
+. 브라우저의 뒤로가기 버튼을 눌러 Overview 페이지로 돌아갑니다.
 
-. Using the *Actions* menu, select the option for *Migration* -> *Compute*.
+. Actions 메뉴를 사용하여 Migration -> Compute 옵션을 선택합니다.
 +
 image::2025_spring/module-01-intro/30_VM_Dialog_Migrate.png[link=self, window=blank, width=100%]
 
-. After a few seconds, the VM will change the status to *Migrating*, and you can follow it's progress. 
+. 몇 초 후, VM 상태가 Migrating으로 변경되고 진행 상황을 확인할 수 있습니다.
 +
 image::2025_spring/module-01-intro/31_VM_Migrating.png[link=self, window=blank, width=100%]
 
-. When the migration is complete the VM will return to the *Running* status, but it will be living on a new node. Let's click on our _virt-launcher-fedora01-uuid_ pod name to verify.
+. 마이그레이션이 완료되면 VM 상태가 다시 Running으로 바뀌고, 이제는 다른 노드에서 실행됩니다. virt-launcher-fedora01-uuid 파드 이름을 클릭하여 이를 확인합니다.
 +
 image::2025_spring/module-01-intro/32_Migrated_Status.png[link=self, window=blank, width=100%]
 
-. We can now see that the virtual machine is living on a new node, in the image _worker-cluster-ttgmt-2_, and that the pod itself now resides in a new pod with a new unique ID as the live migration process transfers the VM instance to a new pod on a new worker node nondisruptively.
+. 이제 VM이 새로운 노드, 즉 _worker-cluster-ttgmt-2_에서 실행되고 있는 것을 확인할 수 있습니다. 또한, 라이브 마이그레이션 과정에서 새로운 파드가 생성되어 VM 인스턴스를 비중단 방식으로 이전한 것도 확인할 수 있습니다.
 +
 image::2025_spring/module-01-intro/33_Pod_Details_Node_Migrated.png[link=self, window=blank, width=100%]
 
-== Summary
+== 요약
 
-In this lab, we did an overview of the Virtualization management environment in OpenShift Virtualization, and performed some basic virtual machine management tasks, including state management and live migration between physical hosts. Both of these are common and often necessary tasks as platform administrators and a great way to familiarize yourself with some basic features available when working with VMs in OpenShift Virtualization.
+이 실습에서는 OpenShift Virtualization의 가상화 관리 환경을 개요 수준에서 살펴보고, 가상 머신의 상태 관리 및 라이브 마이그레이션과 같은 기본적인 작업을 수행해 보았습니다.
+이러한 작업은 플랫폼 관리자에게 매우 흔하며 자주 필요한 작업이며, OpenShift Virtualization 환경에서 가상 머신을 다룰 때 사용할 수 있는 주요 기능들을 익히는 데 큰 도움이 됩니다.
