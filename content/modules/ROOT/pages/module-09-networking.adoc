@@ -123,3 +123,165 @@ image::2025_spring/module-09-networking/12_VM_Network_Console.png[link=self, win
 +
 image::2025_spring/module-09-networking/13_VM_Network_Ping.png[link=self, window=blank, width=100%]
 
+[[udn]]
+== 사용자 정의 네트워크 (User Defined Networks)
+
+사용자 정의 네트워크(UDN)가 도입되기 전까지 OpenShift Container Platform에서 OVN-Kubernetes CNI 플러그인은 기본 네트워크에서만 L3(레이어 3) 토폴로지를 지원했습니다. Kubernetes의 설계 원칙상 모든 파드는 기본 네트워크에 연결되며, 파드 간 통신은 IP 주소를 통해 이루어지고, 네트워크 정책에 따라 트래픽이 제한됩니다. 새로운 네트워크 아키텍처를 학습해야 한다는 점은 전통적인 가상화 관리자의 주요 우려 중 하나였습니다.
+
+UDN의 도입은 Kubernetes 파드 네트워크의 기본 L3 토폴로지에 유연성과 세분화를 제공하며, 사용자 정의 L2(레이어 2), L3, 로컬넷(localnet) 네트워크 세그먼트를 사용할 수 있게 합니다. 이들 세그먼트는 기본적으로 서로 격리되어 있으며, 컨테이너 파드 및 OVN-Kubernetes CNI 플러그인을 사용하는 가상 머신(VM)의 기본 또는 보조 네트워크로 작동할 수 있습니다. UDN은 다양한 네트워크 아키텍처와 토폴로지를 가능하게 하여 네트워크의 유연성, 보안성, 성능을 향상시킵니다.
+
+클러스터 관리자는 `ClusterUserDefinedNetwork` 커스텀 리소스(CR)를 활용하여 클러스터 수준에서 여러 네임스페이스에 걸쳐 적용되는 추가 네트워크를 생성 및 정의할 수 있습니다. 또한, 클러스터 관리자나 일반 사용자는 `UserDefinedNetwork` CR을 사용하여 네임스페이스 수준에서 추가 네트워크를 정의할 수 있습니다.
+
+사용자 정의 네트워크는 다음과 같은 이점을 제공합니다:
+
+*보안 강화를 위한 향상된 네트워크 격리* - Red Hat OpenStack Platform(RHOSP)에서 테넌트를 분리하는 방식처럼, 네임스페이스별로 고유한 기본 네트워크를 가질 수 있습니다. 이는 테넌트 간 트래픽 위험을 줄여 보안을 향상시킵니다.
+
+*네트워크 유연성* - 클러스터 관리자는 기본 네트워크를 L2 또는 L3 유형으로 구성할 수 있습니다. 이로 인해 보조 네트워크 수준의 유연성을 기본 네트워크에 제공합니다.
+
+*간소화된 네트워크 관리* - UDN을 사용하면 복잡한 네트워크 정책 없이 워크로드를 서로 다른 네트워크로 그룹화함으로써 격리를 달성할 수 있습니다.
+
+*고급 기능 제공* - 여러 네임스페이스를 하나의 네트워크에 연결하거나, 네임스페이스 집합별로 구분된 네트워크를 만들 수 있습니다. 사용자는 다양한 네임스페이스나 클러스터에 걸쳐 IP 서브넷을 지정하고 재사용할 수 있어 일관된 네트워크 환경을 구성할 수 있습니다.
+
+=== OpenShift Virtualization과 사용자 정의 네트워크
+
+OpenShift Container Platform 웹 콘솔 또는 CLI를 통해 가상 머신(VM)의 기본 인터페이스에 사용자 정의 네트워크(UDN)를 연결할 수 있습니다. 기본 UDN은 지정한 네임스페이스에서 기본 파드 네트워크를 대체합니다. 파드 네트워크와 달리, 기본 UDN은 프로젝트마다 정의할 수 있으며, 각 프로젝트는 고유한 서브넷 및 토폴로지를 사용할 수 있습니다.
+
+L2 토폴로지를 사용하는 경우, OVN-Kubernetes는 노드 간 오버레이 네트워크를 생성합니다. 이를 통해 추가적인 물리 네트워크 인프라 구성 없이 서로 다른 노드에 있는 VM을 연결할 수 있습니다.
+
+L2 토폴로지는 라이브 마이그레이션 중 클러스터 노드 간에 IP 주소가 유지되므로 NAT(Network Address Translation) 없이도 VM의 무중단 마이그레이션이 가능합니다.
+
+기본 UDN을 구현하기 전에 다음 제한사항을 고려해야 합니다:
+
+. `virtctl ssh` 명령어로 VM에 SSH 접속할 수 없습니다.
+
+. `oc port-forward` 명령어를 사용하여 포트를 VM으로 전달할 수 없습니다.
+
+. 헤드리스 서비스(headless service)를 통해 VM에 접근할 수 없습니다.
+
+. VM 상태 점검을 위한 readiness 및 liveness probe를 정의할 수 없습니다.
+
+NOTE: 현재 OpenShift Virtualization은 보조 사용자 정의 네트워크(secondary UDN)를 지원하지 않습니다.
+
+=== 사용자 정의 네트워크 작업 방법
+
+UDN에 접근할 수 있는 파드를 생성하기 전에 반드시 네임스페이스와 네트워크를 먼저 생성해야 합니다. 기존 네임스페이스에 새 네트워크를 연결하거나, 파드를 포함한 네임스페이스에 UDN을 생성하는 것은 OVN-Kubernetes에 의해 허용되지 않습니다.
+
+이 작업은 클러스터 관리자에 의해 수행되어야 합니다. 다음과 같이 적절한 라벨(`k8s.ovn.org/primary-user-defined-network`)이 지정된 *vmexamples-{user}-udn* 네임스페이스가 할당되어 있다고 가정합니다.
+
+. *Networking*으로 이동한 다음 *UserDefinedNetworks*를 클릭하고 프로젝트 *vmexamples-{user}-udn*를 선택했는지 확인합니다.
++
+image::2025_spring/module-09-networking/14_UDN_List.png[link=self, window=blank, width=100%]
+
+. *Create*를 클릭하고 *UserDefinedNetwork*를 선택합니다.
++
+image::2025_spring/module-09-networking/15_UDN_Create.png[link=self, window=blank, width=100%]
+
+. 서브넷 *192.168.254.0/24*를 지정한 후 *Create* 버튼을 클릭합니다.
++
+image::2025_spring/module-09-networking/16_UDN_Form.png[link=self, window=blank, width=100%]
+
+. 방금 생성한 UDN 구성을 확인합니다.
++
+image::2025_spring/module-09-networking/17_UDN_Created.png[link=self, window=blank, width=100%]
++
+* 폼을 통해 생성할 경우 기본 이름은 *primary-udn*입니다.
+* 기본적으로 L2이며, 현재 OpenShift Virtualization에서 지원되는 유일한 레이어입니다.
+* 역할(Role)은 primary입니다 (VM은 현재 primary 네트워크만 사용할 수 있습니다).
+* Network Attachment Definition(NAD)은 자동으로 생성됩니다.
+
+. 이제 왼쪽 메뉴에서 *NetworkAttachmentDefinitions*로 이동하여 해당 NAD가 자동으로 생성되었는지 확인합니다.
++
+image::2025_spring/module-09-networking/18_UDN_NAD.png[link=self, window=blank, width=100%]
+
+. 사용자 정의 네트워크에 연결된 VM을 생성하려면 https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/networking#virt-connecting-vm-to-primary-udn[다음과 같이 YAML 정의에서 일부 조정^]이 필요합니다. 실습 편의를 위해 아래에 전체 YAML 정의를 제공합니다:
+
+. 상단 메뉴를 사용하여 YAML을 가져올 수 있으며, 아래 이미지를 참고하세요.
++
+image::2025_spring/module-09-networking/19_UDN_Import_YAML.png[link=self, window=blank, width=100%]
++
+[source,yaml,role=execute,subs="attributes"]
+----
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  labels:
+    kubevirt.io/vm: fedora-udn
+  name: fedora-udn
+  namespace: vmexamples-{user}-udn
+spec:
+  dataVolumeTemplates:
+    - apiVersion: cdi.kubevirt.io/v1beta1
+      kind: DataVolume
+      metadata:
+        creationTimestamp: null
+        name: fedora-udn
+      spec:
+        sourceRef:
+          kind: DataSource
+          name: fedora
+          namespace: openshift-virtualization-os-images
+        storage:
+          resources:
+            requests:
+              storage: 30Gi
+  runStrategy: Always
+  template:
+    metadata:
+      name: fedora-udn
+      namespace: vmexamples-{user}-udn
+    spec:
+      domain:
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: rootdisk
+          - disk:
+              bus: virtio
+            name: cloudinitdisk
+          interfaces:
+          - name: primary-udn
+            binding:
+              name: l2bridge
+          rng: {}
+        resources:
+          requests:
+            memory: 2048M
+      networks:
+      - pod: {}
+        name: primary-udn
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - dataVolume:
+          name: fedora-udn
+        name: rootdisk
+      - cloudInitNoCloud:
+          userData: |-
+            #cloud-config
+            user: fedora
+            password: fedora
+            chpasswd: { expire: False }
+        name: cloudinitdisk
+----
+
+. YAML을 붙여넣은 후 아래의 파란색 *Create* 버튼을 클릭하면 VM 생성이 시작됩니다.
++
+image::2025_spring/module-09-networking/20_Create_VM_YAML.png[link=self, window=blank, width=100%]
+
+. *VirtualMachines* 로 이동하여 VM 생성 상태를 확인합니다. 실행 완료 후 *fedora-udn* VM의 *Overview* 탭에서 *Network* 항목에 할당된 IP가 표시됩니다.
++
+image::2025_spring/module-09-networking/21_UDN_Network_Tile.png[link=self, window=blank, width=100%]
+
+. *Console* 탭으로 전환하고 제공된 게스트 계정으로 로그인합니다.
++
+image::2025_spring/module-09-networking/22_UDN_Fedora_Console.png[link=self, window=blank, width=100%]
++
+.. VM은 지정된 서브넷에서 IP를 할당받았습니다.
+.. DHCP를 통해 게이트웨이 설정을 자동으로 수신합니다.
+.. 사용자 정의 네트워크를 통해 인터넷에 접속할 수 있습니다.
+
+== 요약
+
+이 모듈에서는 물리 네트워크와 직접 연결된 가상 머신(VM)을 구성하는 방법을 살펴보았습니다. VM을 물리 네트워크에 직접 연결하면 관리자가 VM에 직접 접속할 수 있으며, 스토리지나 관리 네트워크와 같은 특수 네트워크에 VM을 연결할 수도 있습니다.
+
+사용자 정의 네트워크는 클러스터 관리자와 최종 사용자에게 매우 유연한 네트워크 구성 옵션을 제공하며, 기본 및 보조 네트워크 유형을 보다 자유롭게 관리할 수 있는 환경을 제공합니다.
