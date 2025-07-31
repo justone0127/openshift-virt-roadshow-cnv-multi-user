@@ -33,7 +33,7 @@ image::2025_spring/module-07-tempinst/01_Project_Toggle.png[link=self, window=bl
 +
 image::2025_spring/module-07-tempinst/01_Template_List.png[link=self, window=blank, width=100%]
 
-. 검색창에 *centos9*를 입력한 뒤 Enter를 누릅니다. 나타난 템플릿 목록에서 **centos-stream9-server-small** 템플릿을 찾습니다.
+. 검색창에 **centos9**를 입력한 뒤 Enter를 누릅니다. 나타난 템플릿 목록에서 **centos-stream9-server-small** 템플릿을 찾습니다.
 +
 image::2025_spring/module-07-tempinst/02_Search_Centos9.png[link=self, window=blank, width=100%]
 
